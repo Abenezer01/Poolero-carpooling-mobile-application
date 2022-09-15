@@ -23,7 +23,7 @@ void main() async {
   HttpOverrides.global = MyHttpOverrides();
 
   // Stripe API config
-  Stripe.publishableKey = AppConstants.stripeAPIKey; 
+  Stripe.publishableKey = AppConstants.stripeAPIKey;
 
   runApp(
     GetMaterialApp(

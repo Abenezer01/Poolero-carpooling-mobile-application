@@ -10,7 +10,10 @@ class PaymentController extends GetxController {
   Future<void> makePayment(
       {required String amount, required String currency}) async {
     try {
+      print('makePayment');
       paymentIntentData = await createPaymentIntent(amount, currency);
+      print(paymentIntentData);
+
       if (paymentIntentData != null) {
         await Stripe.instance.initPaymentSheet(
             paymentSheetParameters: SetupPaymentSheetParameters(
@@ -32,6 +35,7 @@ class PaymentController extends GetxController {
 
   displayPaymentSheet() async {
     try {
+      print('displayPaymentSheet');
       await Stripe.instance.presentPaymentSheet();
       Get.snackbar('Payment', 'Payment Successful',
           snackPosition: SnackPosition.BOTTOM,
@@ -62,7 +66,8 @@ class PaymentController extends GetxController {
           Uri.parse('https://api.stripe.com/v1/payment_intents'),
           body: body,
           headers: {
-            'Authorization': 'Bearer Your Stripe Secret Key',
+            'Authorization':
+                'Bearer sk_test_51LiINJCMHlLurkUjbdk9XkHmSH6vIkwQuB5FyBo5ATGf20KB6vP06q3bX7TiHYcinrAg2KoRdYC1rFmm09WVngCD00DuuWXxWl',
             'Content-Type': 'application/x-www-form-urlencoded'
           });
       return jsonDecode(response.body);

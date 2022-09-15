@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pandabar/model.dart';
 import 'package:pandabar/main.view.dart';
+import 'package:carpooling_beta/app/Home/presentation/controllers/payment_controller.dart';
 
 class MyDrawer extends GetWidget<HomeController> {
   const MyDrawer({super.key});

@@ -137,6 +137,7 @@ class FindRideView extends GetView<MapController> {
                       onPresse: () {
                         PaymentController payController = PaymentController();
                         payController.makePayment(amount: '5', currency: 'USD');
+                        
                         // controller.CheckInRide(
                         //   rideId: controller.rides[index]['id'],
                         //   requestedSeats: requestedSeats,
