@@ -108,10 +108,15 @@ class RideRemoteDataSource extends BaseRideRemoteDataSource {
           },
           "carId": ride.car,
           "driverId": ride.driver,
-          "status": "New",
+          "status": ride.status,
         }),
       );
+      print('RideRemoteDataSource');
+      print(response.statusCode);
+      print(ride);
+      print(AppConstants.addRidePath);
       AppConstants.httpResponseHandler(response);
+
       return ride;
     } on DioError catch (error) {
       debugPrint(error.toString());

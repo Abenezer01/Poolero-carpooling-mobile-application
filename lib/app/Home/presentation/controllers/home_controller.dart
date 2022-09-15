@@ -1,3 +1,4 @@
+import 'package:carpooling_beta/app/Profile/presentation/controllers/profile_controller.dart';
 import 'package:carpooling_beta/app/core/components/my_button.dart';
 import 'package:carpooling_beta/app/core/local_database/operations/user_operations.dart';
 import 'package:carpooling_beta/app/core/services/service_locator.dart';
@@ -25,12 +26,17 @@ class HomeController extends GetxController
   @override
   void onInit() async {
     super.onInit();
+    Get.lazyPut(() => ProfileController());
     advancedDrawerController = AdvancedDrawerController();
 
-    final user = await UserLocalDataBaseOperations().get();
-    username.value = user!.username;
-    token.value = user.token;
-    userId.value = user.id;
+    ProfileController profileController = Get.find<ProfileController>();
+    profileController.getProfileInfos().then((value) {
+      final user = profileController.user;
+      // final user = await UserLocalDataBaseOperations().get();
+      username.value = user.username;
+      token.value = user.token;
+      userId.value = user.id;
+    });
 
     final myRidesList = await RidesUseCase(serviceLocator())(userId.value);
     myRidesList.fold((l) {

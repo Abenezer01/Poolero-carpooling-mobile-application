@@ -8,7 +8,7 @@ class Place extends Equatable {
   final double longitude;
 
   Place({
-    required this.id,
+    this.id='',
     required this.city,
     required this.adresse,
     required this.latitude,

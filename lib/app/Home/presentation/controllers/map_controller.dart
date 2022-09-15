@@ -1,7 +1,14 @@
+import 'package:carpooling_beta/app/Profile/presentation/controllers/profile_controller.dart';
+import 'package:carpooling_beta/app/core/local_database/models/user.dart';
+import 'package:carpooling_beta/app/Home/domain/entities/Place.dart';
 import 'package:carpooling_beta/app/Home/domain/entities/directions.dart';
+import 'package:carpooling_beta/app/Home/domain/usecases/add_ride_usecase.dart';
 import 'package:carpooling_beta/app/Home/domain/usecases/find_ride_usecase.dart';
+import 'package:carpooling_beta/app/Home/domain/entities/Ride.dart';
+import 'package:carpooling_beta/app/Home/presentation/controllers/home_controller.dart';
 import 'package:carpooling_beta/app/Home/presentation/screens/find_ride_view.dart';
 import 'package:carpooling_beta/app/core/constants.dart';
+import 'package:carpooling_beta/app/core/local_database/operations/user_operations.dart';
 import 'package:carpooling_beta/app/core/services/service_locator.dart';
 import 'package:carpooling_beta/app/core/theme.dart';
 import 'package:carpooling_beta/app/core/utils.dart';
@@ -22,7 +29,7 @@ class MapController extends GetxController {
   static GoogleMapController? googleMapController;
   late Rx<Marker>? origin, destination, currentLocationMarker;
   Rx<Directions>? directions;
-  late Object fromPosition, toPosition;
+  late Map fromPosition, toPosition;
   RxBool focusOnMap = false.obs;
   RxBool exploreRide = false.obs;
   RxBool switchForm = false.obs;
@@ -39,6 +46,7 @@ class MapController extends GetxController {
   RxList carsList = [].obs;
   RxList ridesList = [].obs;
   String? startTime, endTime;
+  User? user;
 
   @override
   void onInit() async {
@@ -60,6 +68,9 @@ class MapController extends GetxController {
     allowBigBags = false.obs;
     allowSmocking = false.obs;
     choosedCar = ''.obs;
+    ProfileController profileController = Get.find<ProfileController>();
+    carsList.value = profileController.carsList;
+    user = profileController.user;
     isLoading.value = false;
   }
 
@@ -70,6 +81,24 @@ class MapController extends GetxController {
 
   @override
   void onClose() {
+    originTextController.value.dispose();
+    destinationTextController.value.dispose();
+    timePicker1Controller.value.dispose();
+    timePicker2Controller.value.dispose();
+    choosedCarController.value.dispose();
+    totalCostController.value.dispose();
+    numFreeSpotsController.value.dispose();
+    requestedSeatsController.value.dispose();
+    allowPauses = false.obs;
+    allowBigBags = false.obs;
+    allowSmocking = false.obs;
+    choosedCar = ''.obs;
+
+    origin = Marker(markerId: MarkerId('origin')).obs;
+    destination = Marker(markerId: MarkerId('destination')).obs;
+    directions = Directions().obs;
+    isLoading.value = true;
+
     super.onClose();
   }
 
@@ -241,11 +270,59 @@ class MapController extends GetxController {
     });
   }
 
-  void addRide() {}
+  void addRide() async {
+    HomeController homeController = HomeController();
+    final newRide = Ride(
+      id: '',
+      departureDate: startTime!,
+      endTime: endTime!,
+      totalCost: double.parse(totalCostController.value.text),
+      totalDistance: 1.1,
+      numFreeSpots: int.parse(numFreeSpotsController.value.text),
+      availableSeats: int.parse(numFreeSpotsController.value.text),
+      fromPlace: Place(
+        city: fromPosition['city'],
+        adresse: fromPosition['adresse'],
+        latitude: fromPosition['latitude'],
+        longitude: fromPosition['longitude'],
+      ),
+      toPlace: Place(
+        city: toPosition['city'],
+        adresse: toPosition['adresse'],
+        latitude: toPosition['latitude'],
+        longitude: toPosition['longitude'],
+      ),
+      car: choosedCar.value,
+      driver: user!.id,
+      status: 'status',
+      allowPauses: allowPauses.value,
+      allowBigBags: allowBigBags.value,
+      allowSmoking: allowSmocking.value,
+    );
+    final ride = await AddRideUseCase(serviceLocator())(newRide);
+    ride.fold((l) {
+      Get.snackbar('Error occurred', l.message,
+          backgroundColor: AppTheme.accentColor, colorText: Colors.white);
+    }, (r) {
+      homeController.myRides.add(r);
+      Get.snackbar(
+        'New Ride',
+        'Your ride was added successfully',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(10),
+        duration: const Duration(seconds: 2),
+      );
+
+      Get.toNamed('/home');
+    });
+    isLoading.value = false;
+  }
 
   void findRide() async {
-    final fromCity = (fromPosition as Map)['city'];
-    final toCity = (toPosition as Map)['city'];
+    final fromCity = fromPosition['city'];
+    final toCity = toPosition['city'];
     final departureDate = startTime;
     final resultsRidesList = await FindRideUseCase(serviceLocator())(
         fromCity,

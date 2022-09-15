@@ -12,14 +12,15 @@ class MyRidesPage extends GetWidget<HomeController> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      physics: ScrollPhysics(),
       child: Padding(
-        padding: const EdgeInsets.all(15.0),
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
         child: Column(
           children: [
             Obx(
               () => !controller.isLoading.value && controller.myRides.isNotEmpty
                   ? ListView.builder(
-                      scrollDirection: Axis.vertical,
+                      physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       padding: const EdgeInsets.symmetric(
                           horizontal: 15, vertical: 10),
@@ -131,8 +132,10 @@ class MyRidesPage extends GetWidget<HomeController> {
                           ],
                         );
                       })
-                  : Center(
-                      child: CircularProgressIndicator(),
+                  : Container(
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
                     ),
             ),
           ],

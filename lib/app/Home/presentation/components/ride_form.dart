@@ -162,9 +162,6 @@ class RideForm extends GetWidget<MapController> {
                                                   itemBuilder:
                                                       (BuildContext context,
                                                           int index) {
-                                                    // for (dynamic car
-                                                    //     in controller
-                                                    //         .carsList)
                                                     return Container(
                                                       width: 20,
                                                       margin: const EdgeInsets
@@ -196,24 +193,21 @@ class RideForm extends GetWidget<MapController> {
                                                           GestureDetector(
                                                             onTap: () {
                                                               controller
-                                                                  .choosedCarController
-                                                                  .value
-                                                                  .text = controller.carsList[index]
-                                                                              ['model']
-                                                                          [
-                                                                          'mark']
-                                                                      ['name'] +
-                                                                  ' - ' +
-                                                                  controller.carsList[
-                                                                              index]
-                                                                          [
-                                                                          'model']
-                                                                      ['name'];
+                                                                      .choosedCarController
+                                                                      .value
+                                                                      .text =
+                                                                  '${controller.carsList[index].model.name} - ${controller.carsList[index].mark.name}';
                                                               controller
-                                                                  .choosedCar
-                                                                  .value = controller
+                                                                      .choosedCar
+                                                                      .value =
+                                                                  controller
                                                                       .carsList[
-                                                                  index]['id'];
+                                                                          index]
+                                                                      .id;
+                                                              print(controller
+                                                                  .carsList[
+                                                                      index]
+                                                                  .id);
                                                               Get.close(1);
                                                             },
                                                             child: Container(
@@ -223,10 +217,10 @@ class RideForm extends GetWidget<MapController> {
                                                             ),
                                                           ),
                                                           Text(
-                                                            controller.carsList[
-                                                                        index]
-                                                                    ['model'][
-                                                                'mark']['name'],
+                                                            controller
+                                                                .carsList[index]
+                                                                .mark
+                                                                .name,
                                                             style: TextStyle(
                                                               color: AppTheme
                                                                   .naturalColor2,
@@ -240,15 +234,15 @@ class RideForm extends GetWidget<MapController> {
                                                           ),
                                                           SizedBox(height: 5),
                                                           Text(
-                                                            controller.carsList[
-                                                                        index]
-                                                                    ['model']
-                                                                ['name'],
+                                                            controller
+                                                                .carsList[index]
+                                                                .model
+                                                                .name,
                                                             style: TextStyle(
                                                               color: AppTheme
                                                                   .naturalColor4,
-                                                              fontFamily:
-                                                                  'Nunito',
+                                                              fontFamily: AppTheme
+                                                                  .primaryFont,
                                                               fontSize: 12,
                                                               fontWeight:
                                                                   FontWeight

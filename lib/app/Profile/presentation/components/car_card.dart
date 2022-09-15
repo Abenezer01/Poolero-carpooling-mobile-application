@@ -36,16 +36,6 @@ class CarCard extends StatelessWidget {
         children: [
           GestureDetector(
             onTap: onTap,
-            // (id != '')
-            //     ? Get.to(() => AddCarView(), arguments: {
-            //         'car_id': id,
-            //         'category_id': json.decode(category)['id'],
-            //         'color_id': json.decode(color)['id'],
-            //         'mark_id': json.decode(model)['mark']['id'],
-            //         'model_id': json.decode(model)['id'],
-            //       })
-            //     : Get.to(() => AddCarView(), arguments: {'car_id': ''});
-            // },
             child: Container(
               height: 56,
               child: Image.asset(image),
@@ -68,7 +58,7 @@ class CarCard extends StatelessWidget {
                   car!.model.name,
                   style: TextStyle(
                     color: AppTheme.naturalColor4,
-                    fontFamily: 'Nunito',
+                    fontFamily: AppTheme.primaryFont,
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
                   ),
