@@ -1,5 +1,9 @@
 import 'package:carpooling_beta/app/Home/domain/entities/directions.dart';
+import 'package:carpooling_beta/app/Home/domain/usecases/find_ride_usecase.dart';
+import 'package:carpooling_beta/app/Home/presentation/screens/find_ride_view.dart';
 import 'package:carpooling_beta/app/core/constants.dart';
+import 'package:carpooling_beta/app/core/services/service_locator.dart';
+import 'package:carpooling_beta/app/core/theme.dart';
 import 'package:carpooling_beta/app/core/utils.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +37,8 @@ class MapController extends GetxController {
   late RxBool allowPauses, allowBigBags, allowSmocking;
   late RxString choosedCar;
   RxList carsList = [].obs;
-  late String startTime, endTime;
+  RxList ridesList = [].obs;
+  String? startTime, endTime;
 
   @override
   void onInit() async {
@@ -238,40 +243,28 @@ class MapController extends GetxController {
 
   void addRide() {}
 
-  void findRide() {
-    isLoading.value = true;
-
-    try {
-      // rideProvider
-      //     .findRide(
-      //   startPlace: null, // (fromPosition as Map)['city'].toString()
-      //   endPlace: null, // (toPosition as Map)['city'].toString()
-      //   startTime: null,
-      //   requestedSeats: int.parse(requestedSeatsController.value.text),
-      //   driverId: null,
-      // ).then((response) async {
-      //   if (response.body.isNotEmpty) {
-      //     dynamic data = json.decode(response.body);
-      //     print(data);
-      //     if (data != null) {
-      //       Get.to(
-      //         FindRideView(rides: data, requestedSeats: 0),
-      //         popGesture: true,
-      //       );
-      //     } else {
-      //       Get.snackbar('Ride', 'Problem occurred when Login',
-      //           backgroundColor: AccentColor, colorText: Colors.white);
-      //     }
-      //   }
-
-      // }).catchError((err) {
-      // print(err.toString());
-      // Get.snackbar('Ride', err.toString(),
-      //     backgroundColor: AccentColor, colorText: Colors.white);
-      // });
-    } finally {
-      isLoading.value = false;
-    }
+  void findRide() async {
+    final fromCity = (fromPosition as Map)['city'];
+    final toCity = (toPosition as Map)['city'];
+    final departureDate = startTime;
+    final resultsRidesList = await FindRideUseCase(serviceLocator())(
+        fromCity,
+        toCity,
+        departureDate,
+        int.parse(requestedSeatsController.value.text),
+        null);
+    resultsRidesList.fold((l) {
+      Get.snackbar('Error occurred', l.message,
+          backgroundColor: AppTheme.accentColor, colorText: Colors.white);
+    }, (r) {
+      ridesList.clear();
+      ridesList.addAll(r);
+      Get.to(
+        FindRideView(),
+        popGesture: true,
+      );
+    });
+    isLoading.value = false;
   }
 
   void CheckInRide({required String rideId, required int requestedSeats}) {}

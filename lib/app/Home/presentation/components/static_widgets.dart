@@ -423,7 +423,6 @@ class TripCard extends StatelessWidget {
   }
 }
 
-
 class MyActionButton extends StatelessWidget {
   final String toolTiptext;
   final VoidCallback onPressedCall;
@@ -438,6 +437,7 @@ class MyActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.symmetric(horizontal: 5),
       width: 40,
       height: 40,
       child: FloatingActionButton(

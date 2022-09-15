@@ -1,10 +1,12 @@
 import 'dart:io';
+import 'package:carpooling_beta/app/core/constants.dart';
 import 'package:carpooling_beta/app/core/local_database/models/user.dart';
 import 'package:carpooling_beta/app/core/services/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'app/routes/app_pages.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,6 +21,9 @@ void main() async {
 
   // Init HTTP Client Overrides
   HttpOverrides.global = MyHttpOverrides();
+
+  // Stripe API config
+  Stripe.publishableKey = AppConstants.stripeAPIKey; 
 
   runApp(
     GetMaterialApp(

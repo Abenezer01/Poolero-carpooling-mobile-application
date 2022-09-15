@@ -13,8 +13,8 @@ abstract class BaseRideRemoteDataSource {
   Future<List<RideModel>> getMyRides(String userId);
   Future<List<CheckingModel>> getMyChecking(String userId);
   Future<Ride> addRide(Ride ride);
-  Future<List<RideModel>> findRides(Place? fromPlace, Place? toPlace,
-      String? departureDate, int requestedSeats, String? driverId);
+  Future<List<RideModel>> findRides(String? fromPlace, String? toPlace,
+      String? departureDate, int? requestedSeats, String? driverId);
 }
 
 class RideRemoteDataSource extends BaseRideRemoteDataSource {
@@ -127,15 +127,18 @@ class RideRemoteDataSource extends BaseRideRemoteDataSource {
   }
 
   @override
-  Future<List<RideModel>> findRides(Place? fromPlace, Place? toPlace,
-      String? departureDate, int requestedSeats, String? driverId) async {
+  Future<List<RideModel>> findRides(String? fromPlace, String? toPlace,
+      String? departureDate, int? requestedSeats, String? driverId) async {
     try {
+      print("RideRemoteDataSource");
+      print(
+          'fromPlace: $fromPlace - toPlace: $toPlace - departureDate: $departureDate - requestedSeats: $requestedSeats - driverId: $driverId');
       http.Response response = await http.post(
         Uri.parse(AppConstants.getRidesPath),
         headers: AppConstants.headers,
         body: jsonEncode({
-          "fromPlace": fromPlace!.city,
-          "toPlace": toPlace!.city,
+          "fromPlace": fromPlace,
+          "toPlace": toPlace,
           "departureDate": departureDate,
           "requestedSeats": requestedSeats,
           "driverId": driverId,

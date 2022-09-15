@@ -59,10 +59,10 @@ class RideRepository extends BaseRideRepository {
 
   @override
   Future<Either<DomainError, List<Ride>>> findRideRepo(
-      Place? fromPlace,
-      Place? toPlace,
+      String? fromPlace,
+      String? toPlace,
       String? departureDate,
-      int requestedSeats,
+      int? requestedSeats,
       String? driverId) async {
     try {
       print('RideRepository');

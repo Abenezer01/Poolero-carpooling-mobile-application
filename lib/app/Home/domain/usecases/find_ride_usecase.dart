@@ -9,8 +9,8 @@ class FindRideUseCase {
 
   FindRideUseCase(this.baseRideRepository);
 
-  Future<Either<DomainError, List<Ride>>> call(Place fromPlace, Place toPlace,
-      String departureDate, int requestedSeats, String driverId) async {
+  Future<Either<DomainError, List<Ride>>> call(String? fromPlace, String? toPlace,
+      String? departureDate, int? requestedSeats, String? driverId) async {
     print('FindRideUseCase');
     return await baseRideRepository.findRideRepo(
         fromPlace, toPlace, departureDate, requestedSeats, driverId);

@@ -11,10 +11,10 @@ abstract class BaseRideRepository {
   Future<Either<DomainError, Ride>> addRideRepo(Ride ride);
 
   Future<Either<DomainError, List<Ride>>> findRideRepo(
-    Place? fromPlace,
-    Place? toPlace,
+    String? fromPlace,
+    String? toPlace,
     String? departureDate,
-    int requestedSeats,
+    int? requestedSeats,
     String? driverId,
   );
 }

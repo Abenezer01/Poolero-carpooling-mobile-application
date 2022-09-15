@@ -3,6 +3,9 @@ import 'package:carpooling_beta/app/core/error_handling/http_error.dart';
 
 class AppConstants {
   static const String googleAPIKey = 'AIzaSyB5prNAYR4fcQ-FMDMVfOwskPAo6ZOk0II';
+  static const String stripeAPIKey =
+      'pk_test_51LiINJCMHlLurkUjeocsPwq1EzRMUxQtSuOOIM2KVKgIrs4j354mv4zM4ntBwGjvGiW6gf6n4BxlT0OrE2o64WUM00Yp923Hvs';
+
   static const String googleDirectionsBaseUrl =
       'https://maps.googleapis.com/maps/api/directions/json';
   static const String baseUrl = 'https://192.168.1.37:45455/api';
