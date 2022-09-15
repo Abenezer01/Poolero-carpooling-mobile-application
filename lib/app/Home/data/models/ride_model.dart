@@ -38,9 +38,9 @@ class RideModel extends Ride {
       meetPoint: json['meetPoint'],
       numFreeSpots: json['numFreeSpots'],
       availableSeats: json['availableSeats'],
-      allowPauses: json['allowPauses'],
-      allowBigBags: json['allowBigBags'],
-      allowSmoking: json['allowSmoking'],
+      allowPauses: json['allowPauses'] == 1 ? true : false,
+      allowBigBags: json['allowBigBags'] == 1 ? true : false,
+      allowSmoking: json['allowSmoking'] == 1 ? true : false,
       fromPlace: PlaceModel(
         id: json['fromPlace']['id'],
         adresse: json['fromPlace']['adresse'],

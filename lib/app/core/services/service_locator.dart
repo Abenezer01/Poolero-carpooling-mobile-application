@@ -16,6 +16,8 @@ import 'package:carpooling_beta/app/Profile/domain/repository/base_profile_repos
 import 'package:carpooling_beta/app/Profile/domain/usecases/profile_usecase.dart';
 import 'package:carpooling_beta/app/Profile/domain/usecases/car_usecase.dart';
 import 'package:carpooling_beta/app/Home/domain/usecases/rides_usecase.dart';
+import 'package:carpooling_beta/app/Home/domain/usecases/add_ride_usecase.dart';
+import 'package:carpooling_beta/app/Home/domain/usecases/find_ride_usecase.dart';
 import 'package:carpooling_beta/app/Home/domain/usecases/checkings_usecase.dart';
 import 'package:carpooling_beta/app/Home/data/repository/ride_repository.dart';
 import 'package:carpooling_beta/app/core/local_database/operations/user_operations.dart';
@@ -72,6 +74,8 @@ class ServiceLoctor {
     serviceLocator.registerLazySingleton(() => CarUseCase(serviceLocator()));
     // Ride Usecases
     serviceLocator.registerLazySingleton(() => RidesUseCase(serviceLocator()));
+    serviceLocator.registerLazySingleton(() => AddRideUseCase(serviceLocator()));
+    serviceLocator.registerLazySingleton(() => FindRideUseCase(serviceLocator()));
     // Checking Usecases
     serviceLocator.registerLazySingleton(() => CheckingsUseCase(serviceLocator()));
   }

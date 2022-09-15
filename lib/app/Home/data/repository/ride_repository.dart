@@ -1,4 +1,5 @@
 import 'package:carpooling_beta/app/Home/data/datasource/ride_remote_datasource.dart';
+import 'package:carpooling_beta/app/Home/domain/entities/Place.dart';
 import 'package:carpooling_beta/app/Home/domain/entities/Ride.dart';
 import 'package:carpooling_beta/app/Home/domain/repository/base_ride_repository.dart';
 import 'package:carpooling_beta/app/core/error_handling/domain_error.dart';
@@ -27,10 +28,48 @@ class RideRepository extends BaseRideRepository {
   Future<Either<DomainError, List<Checking>>> getMyCheckingsRepo(
       String userId) async {
     try {
-      print('RideRepository');
+      print('getMyCheckingsRepo');
       final myCheckings = await baseRideRemoteDataSource.getMyChecking(userId);
+      final checkings = List<Checking>.from(myCheckings.map((e) => Checking(
+            id: e.id,
+            passager: e.passager,
+            ride: e.ride,
+            requestedSeats: e.requestedSeats,
+          )));
+      print(checkings);
+      return Right(checkings);
+    } on DomainError catch (e) {
+      print(e.message);
+      return Left(e);
+    }
+  }
 
-      return Right(myCheckings);
+  @override
+  Future<Either<DomainError, Ride>> addRideRepo(Ride ride) async {
+    try {
+      print('RideRepository');
+      final newRide = await baseRideRemoteDataSource.addRide(ride);
+
+      return Right(newRide);
+    } on DomainError catch (e) {
+      print(e.message);
+      return Left(e);
+    }
+  }
+
+  @override
+  Future<Either<DomainError, List<Ride>>> findRideRepo(
+      Place? fromPlace,
+      Place? toPlace,
+      String? departureDate,
+      int requestedSeats,
+      String? driverId) async {
+    try {
+      print('RideRepository');
+      final ridesList = await baseRideRemoteDataSource.findRides(
+          fromPlace, toPlace, departureDate, requestedSeats, driverId);
+
+      return Right(ridesList);
     } on DomainError catch (e) {
       print(e.message);
       return Left(e);

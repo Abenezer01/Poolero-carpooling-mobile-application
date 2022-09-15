@@ -13,6 +13,8 @@ class PlaceModel extends Place {
 
   factory PlaceModel.fromJson(Map<String, dynamic> json) {
     try {
+      print('PlaceModel:');
+      print(json);
       if (!json.containsKey('id')) {
         throw DataError.missingParameters();
       }

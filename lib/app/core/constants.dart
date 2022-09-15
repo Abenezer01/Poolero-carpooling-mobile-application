@@ -5,7 +5,7 @@ class AppConstants {
   static const String googleAPIKey = 'AIzaSyB5prNAYR4fcQ-FMDMVfOwskPAo6ZOk0II';
   static const String googleDirectionsBaseUrl =
       'https://maps.googleapis.com/maps/api/directions/json';
-  static const String baseUrl = 'https://192.168.1.37:45457/api';
+  static const String baseUrl = 'https://192.168.1.37:45455/api';
 
   static const Map<String, String> headers = {
     'Content-Type': 'application/json; charset=UTF-8',
@@ -23,6 +23,7 @@ class AppConstants {
   static String deleteCarPath(String id) => '$baseUrl/Car/$id';
   static const String getRidesPath = '$baseUrl/Ride/GetAllRides';
   static const String getCheckingsPath = '$baseUrl/CheckIn/GetAllCheckIns';
+  static const String addRidePath = '$baseUrl/Ride';
 
   static dynamic httpResponseHandler(http.Response response) {
     if (response.statusCode == 200 ||

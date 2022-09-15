@@ -212,7 +212,7 @@ class BottomBar extends GetWidget<HomeController> {
         controller.pageId.value = id;
       },
       onFabButtonPressed: () {
-        Get.toNamed('/rider');
+        Get.toNamed('/map');
       },
     );
   }
@@ -417,6 +417,38 @@ class TripCard extends StatelessWidget {
               ],
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+
+class MyActionButton extends StatelessWidget {
+  final String toolTiptext;
+  final VoidCallback onPressedCall;
+  final IconData icon;
+  const MyActionButton({
+    required this.toolTiptext,
+    required this.onPressedCall,
+    required this.icon,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 40,
+      height: 40,
+      child: FloatingActionButton(
+        heroTag: toolTiptext,
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        onPressed: onPressedCall,
+        child: Icon(
+          icon,
+          color: AppTheme.primaryColor,
+          size: 20,
         ),
       ),
     );

@@ -1,9 +1,8 @@
-import 'package:carpooling_beta/app/Home/domain/entities/Ride.dart';
-import 'package:carpooling_beta/app/Profile/presentation/controllers/profile_controller.dart';
 import 'package:carpooling_beta/app/core/components/my_button.dart';
 import 'package:carpooling_beta/app/core/local_database/operations/user_operations.dart';
 import 'package:carpooling_beta/app/core/services/service_locator.dart';
 import 'package:carpooling_beta/app/Home/domain/usecases/rides_usecase.dart';
+import 'package:carpooling_beta/app/Home/domain/usecases/checkings_usecase.dart';
 import 'package:carpooling_beta/app/core/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
@@ -20,7 +19,7 @@ class HomeController extends GetxController
       TabController(vsync: this, length: 4);
   RxString pageId = 'Home'.obs;
   late final RxList<dynamic> myRides = [].obs;
-  RxList myCheckings = [].obs;
+  late final RxList<dynamic> myCheckings = [].obs;
   RxString checkingId = ''.obs;
 
   @override
@@ -39,6 +38,15 @@ class HomeController extends GetxController
     }, (r) {
       print(r);
       myRides.addAll(r);
+    });
+
+    final myCheckingsList =
+        await CheckingsUseCase(serviceLocator())(userId.value);
+    myCheckingsList.fold((l) {
+      Get.snackbar('Error occurred', l.message);
+    }, (r) {
+      print(r);
+      myCheckings.addAll(r);
     });
     isLoading.value = false;
   }

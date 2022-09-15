@@ -6,7 +6,6 @@ class Passager extends Equatable {
   final String lastName;
   final String userName;
   final String email;
-  final int requestedSeats;
 
   Passager({
     required this.id,
@@ -14,17 +13,9 @@ class Passager extends Equatable {
     required this.lastName,
     required this.userName,
     required this.email,
-    required this.requestedSeats,
   });
 
   @override
   // TODO: implement props
-  List<Object?> get props => [
-        id,
-        firstName,
-        lastName,
-        userName,
-        email,
-        requestedSeats,
-      ];
+  List<Object?> get props => [id, firstName, lastName, userName, email];
 }

@@ -9,7 +9,6 @@ class PassagerModel extends Passager {
     required super.lastName,
     required super.userName,
     required super.email,
-    required super.requestedSeats,
   });
 
   factory PassagerModel.fromJson(Map<String, dynamic> json) {
@@ -17,13 +16,13 @@ class PassagerModel extends Passager {
       if (!json.containsKey('id')) {
         throw DataError.missingParameters();
       }
+      
       return PassagerModel(
         id: json['id'],
         firstName: json['firstName'],
         lastName: json['lastName'],
         userName: json['userName'],
         email: json['email'],
-        requestedSeats: json['requestedSeats'],
       );
     } on DataError catch (e) {
       debugPrint(e.toString());

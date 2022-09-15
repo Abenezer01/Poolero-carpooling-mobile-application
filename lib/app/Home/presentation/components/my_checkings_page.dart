@@ -45,8 +45,7 @@ class MyCheckingsPage extends GetWidget<HomeController> {
                                   ),
                                   Expanded(
                                     child: Text(
-                                      controller.myCheckings[index]['ride']
-                                          ['fromPlace']['adresse'],
+                                      controller.myCheckings[index].ride.fromPlace.adresse,
                                       style: TextStyle(
                                         fontFamily: AppTheme.primaryFont,
                                         fontSize: 18,
@@ -85,8 +84,7 @@ class MyCheckingsPage extends GetWidget<HomeController> {
                                   ),
                                   Expanded(
                                     child: Text(
-                                      controller.myCheckings[index]['ride']
-                                          ['toPlace']['adresse'],
+                                      controller.myCheckings[index].ride.toPlace.adresse,
                                       style: TextStyle(
                                         fontFamily: AppTheme.primaryFont,
                                         fontSize: 18,
@@ -132,7 +130,7 @@ class MyCheckingsPage extends GetWidget<HomeController> {
                                 textTitle: 'Cancel',
                                 onPresse: () {
                                   controller.checkingId.value =
-                                      controller.myCheckings[index]['id'];
+                                      controller.myCheckings[index].id;
                                   controller.questionDialog();
                                 }),
                           ],
