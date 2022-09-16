@@ -25,8 +25,7 @@ class RideRepository extends BaseRideRepository {
   }
 
   @override
-  Future<Either<DomainError, List<Checking>>> getMyCheckingsRepo(
-      String userId) async {
+  Future<Either<DomainError, List<Checking>>> getMyCheckingsRepo(String userId) async {
     try {
       print('getMyCheckingsRepo');
       final myCheckings = await baseRideRemoteDataSource.getMyChecking(userId);
@@ -57,6 +56,21 @@ class RideRepository extends BaseRideRepository {
     }
   }
 
+  
+  @override
+  Future<Either<DomainError, bool>> cancelCheckingRepo(String rideId) async {
+    try {
+      print('RideRepository');
+      final deleted = await baseRideRemoteDataSource.cancelChecking(rideId);
+
+      return Right(deleted);
+    } on DomainError catch (e) {
+      print(e.message);
+      return Left(e);
+    }
+  }
+
+  
   @override
   Future<Either<DomainError, List<Ride>>> findRideRepo(
       String? fromPlace,

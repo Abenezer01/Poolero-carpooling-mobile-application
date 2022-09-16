@@ -1,0 +1,171 @@
+{
+  "project_info": {
+    "project_number": "632890754562",
+    "firebase_url": "https://carpooling-fc3b4-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "carpooling-fc3b4",
+    "storage_bucket": "carpooling-fc3b4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:632890754562:android:4e42d4c1cf6b5c96f2c91b",
+        "android_client_info": {
+          "package_name": "com.example.carpooling"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "632890754562-6m15kv2uppv4uth49384ct2s1blicgfe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyKxpWybZ2aDhVlgeB7RWbFgzcL05bO3M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "632890754562-6m15kv2uppv4uth49384ct2s1blicgfe.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "632890754562-e7f5s85snar4pu49lue7d4dlkbceuqik.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.firechat"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:632890754562:android:6f42ea6fa874d521f2c91b",
+        "android_client_info": {
+          "package_name": "com.example.carpooling_beta"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "632890754562-6m15kv2uppv4uth49384ct2s1blicgfe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyKxpWybZ2aDhVlgeB7RWbFgzcL05bO3M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "632890754562-6m15kv2uppv4uth49384ct2s1blicgfe.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "632890754562-e7f5s85snar4pu49lue7d4dlkbceuqik.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.firechat"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:632890754562:android:c8e6c55e68c20967f2c91b",
+        "android_client_info": {
+          "package_name": "com.example.firechat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "632890754562-u9d4kndpj2sl9rgn7rqvtf5liumu8oaa.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.firechat",
+            "certificate_hash": "a878eb84e1b7086377ac29f8196e80bc7a584e72"
+          }
+        },
+        {
+          "client_id": "632890754562-6m15kv2uppv4uth49384ct2s1blicgfe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyKxpWybZ2aDhVlgeB7RWbFgzcL05bO3M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "632890754562-6m15kv2uppv4uth49384ct2s1blicgfe.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "632890754562-e7f5s85snar4pu49lue7d4dlkbceuqik.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.firechat"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:632890754562:android:126ca2ec43c28b1cf2c91b",
+        "android_client_info": {
+          "package_name": "zaid.maslouhi.car_pooling"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "632890754562-lgno5tjmt44u8s9hj4os850dsgrdnjre.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "zaid.maslouhi.car_pooling",
+            "certificate_hash": "a878eb84e1b7086377ac29f8196e80bc7a584e72"
+          }
+        },
+        {
+          "client_id": "632890754562-6m15kv2uppv4uth49384ct2s1blicgfe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyKxpWybZ2aDhVlgeB7RWbFgzcL05bO3M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "632890754562-6m15kv2uppv4uth49384ct2s1blicgfe.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "632890754562-e7f5s85snar4pu49lue7d4dlkbceuqik.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.firechat"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

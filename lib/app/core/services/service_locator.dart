@@ -4,6 +4,12 @@ import 'package:carpooling_beta/app/Auth/data/repository/auth_repository.dart';
 import 'package:carpooling_beta/app/Auth/domain/repository/base_auth_repository.dart';
 import 'package:carpooling_beta/app/Auth/domain/usecases/login_usecase.dart';
 import 'package:carpooling_beta/app/Auth/domain/usecases/register_usecase.dart';
+import 'package:carpooling_beta/app/Chat/data/datasource/Chat_remote_datasource.dart';
+import 'package:carpooling_beta/app/Chat/data/repository/chat_repository.dart';
+import 'package:carpooling_beta/app/Chat/domain/repository/base_chat_repository.dart';
+import 'package:carpooling_beta/app/Chat/domain/usecases/get_messages_usecase.dart';
+import 'package:carpooling_beta/app/Chat/domain/usecases/send_message_usecase.dart';
+import 'package:carpooling_beta/app/Chat/domain/usecases/get_conversations_usecase.dart';
 import 'package:carpooling_beta/app/Home/data/datasource/ride_remote_datasource.dart';
 import 'package:carpooling_beta/app/Home/domain/repository/base_ride_repository.dart';
 import 'package:carpooling_beta/app/Profile/data/datasource/car_remote_datasource.dart';
@@ -19,6 +25,7 @@ import 'package:carpooling_beta/app/Home/domain/usecases/rides_usecase.dart';
 import 'package:carpooling_beta/app/Home/domain/usecases/add_ride_usecase.dart';
 import 'package:carpooling_beta/app/Home/domain/usecases/find_ride_usecase.dart';
 import 'package:carpooling_beta/app/Home/domain/usecases/checkings_usecase.dart';
+import 'package:carpooling_beta/app/Home/domain/usecases/cancel_checking_usecase.dart';
 import 'package:carpooling_beta/app/Home/data/repository/ride_repository.dart';
 import 'package:carpooling_beta/app/core/local_database/operations/user_operations.dart';
 import 'package:get_it/get_it.dart';
@@ -47,6 +54,9 @@ class ServiceLoctor {
     // Ride DataSource
     serviceLocator.registerLazySingleton<BaseRideRemoteDataSource>(
         () => RideRemoteDataSource());
+    // Chat DataSource
+    serviceLocator.registerLazySingleton<BaseChatRemoteDataSource>(
+        () => ChatRemoteDataSource());
 
     /// REPOSIORIES
     // Auth Repositories
@@ -61,6 +71,9 @@ class ServiceLoctor {
     // Ride Repositories
     serviceLocator.registerLazySingleton<BaseRideRepository>(
         () => RideRepository(serviceLocator()));
+    // Chat Repositories
+    serviceLocator.registerLazySingleton<BaseChatRepository>(
+        () => ChatRepository(serviceLocator()));
 
     //// USECASES
     // Auth Usecases
@@ -74,9 +87,21 @@ class ServiceLoctor {
     serviceLocator.registerLazySingleton(() => CarUseCase(serviceLocator()));
     // Ride Usecases
     serviceLocator.registerLazySingleton(() => RidesUseCase(serviceLocator()));
-    serviceLocator.registerLazySingleton(() => AddRideUseCase(serviceLocator()));
-    serviceLocator.registerLazySingleton(() => FindRideUseCase(serviceLocator()));
+    serviceLocator
+        .registerLazySingleton(() => AddRideUseCase(serviceLocator()));
+    serviceLocator
+        .registerLazySingleton(() => FindRideUseCase(serviceLocator()));
     // Checking Usecases
-    serviceLocator.registerLazySingleton(() => CheckingsUseCase(serviceLocator()));
+    serviceLocator
+        .registerLazySingleton(() => CheckingsUseCase(serviceLocator()));
+    serviceLocator
+        .registerLazySingleton(() => CancelChechingUseCase(serviceLocator()));
+    // Chat Usecases
+    serviceLocator
+        .registerLazySingleton(() => GetMessagesUseCase(serviceLocator()));
+    serviceLocator
+        .registerLazySingleton(() => SendMessageUseCase(serviceLocator()));
+    serviceLocator
+        .registerLazySingleton(() => GetConversationsUseCase(serviceLocator()));
   }
 }

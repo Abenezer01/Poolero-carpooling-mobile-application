@@ -9,7 +9,11 @@ class MyGoogleMap extends GetWidget<MapController> {
 
   @override
   Widget build(BuildContext context) {
-    return GoogleMap(
+    return Obx(
+      () => GoogleMap(
+        onTap: (latLng) {
+          controller.focusOnMap.value = true;
+        },
         initialCameraPosition: controller.initialCameraPosition,
         zoomControlsEnabled: true,
         myLocationButtonEnabled: true,
@@ -33,6 +37,7 @@ class MyGoogleMap extends GetWidget<MapController> {
                   .toList(),
             ),
         },
+      ),
     );
   }
 }

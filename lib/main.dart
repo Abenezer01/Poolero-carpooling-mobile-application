@@ -7,6 +7,9 @@ import 'package:get/get.dart';
 import 'app/routes/app_pages.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:carpooling_beta/firebase_options.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,11 +22,21 @@ void main() async {
   // Init Service Locator
   ServiceLoctor().init();
 
+  // Firebase Init
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  FirebaseMessaging.instance.getToken().then((value) {
+    print('Token: ${value}');
+  });
+
   // Init HTTP Client Overrides
   HttpOverrides.global = MyHttpOverrides();
 
   // Stripe API config
   Stripe.publishableKey = AppConstants.stripeAPIKey;
+
+  // Notofications Config
 
   runApp(
     GetMaterialApp(

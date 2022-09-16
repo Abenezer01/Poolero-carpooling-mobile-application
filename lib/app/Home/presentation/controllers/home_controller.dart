@@ -1,3 +1,4 @@
+import 'package:carpooling_beta/app/Home/domain/usecases/cancel_checking_usecase.dart';
 import 'package:carpooling_beta/app/Profile/presentation/controllers/profile_controller.dart';
 import 'package:carpooling_beta/app/core/components/my_button.dart';
 import 'package:carpooling_beta/app/core/local_database/operations/user_operations.dart';
@@ -40,7 +41,8 @@ class HomeController extends GetxController
 
     final myRidesList = await RidesUseCase(serviceLocator())(userId.value);
     myRidesList.fold((l) {
-      Get.snackbar('Error occurred', l.message);
+      Get.snackbar('Error occurred', l.message,
+          backgroundColor: AppTheme.accentColor, colorText: Colors.white);
     }, (r) {
       print(r);
       myRides.addAll(r);
@@ -112,11 +114,13 @@ class HomeController extends GetxController
                     SizedBox(width: 15),
                     Expanded(
                       child: MyButton(
-                        isPrimary: true,
-                        isDisabled: false,
-                        textTitle: 'Confirm',
-                        onPresse: () => cancelChecking(),
-                      ),
+                          isPrimary: true,
+                          isDisabled: false,
+                          textTitle: 'Confirm',
+                          onPresse: () {
+                            cancelChecking();
+                            Get.close(1);
+                          }),
                     ),
                   ],
                 ),
@@ -127,12 +131,25 @@ class HomeController extends GetxController
       );
 
   void cancelChecking() async {
-    print("CHEKING ID: ${checkingId.value}");
-    // http.Response response =
-    //     await rideProvider.cancelChecking(checkingId.value);
-    // if (response.statusCode == 200) {
-    //   successDialog();
-    // }
-    Get.toNamed('/home');
+    final deletedChecking =
+        await CancelChechingUseCase(serviceLocator())(checkingId.value);
+    deletedChecking.fold((l) {
+      Get.snackbar('Error occurred', l.message);
+    }, (r) {
+      print(r);
+      if (r) {
+        myCheckings.removeWhere((element) => element.id == checkingId.value);
+
+        Get.snackbar(
+          'Checking',
+          'Your Checking was successfully',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(10),
+          duration: const Duration(seconds: 2),
+        );
+      }
+    });
   }
 }

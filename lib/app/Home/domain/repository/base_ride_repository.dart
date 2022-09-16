@@ -9,6 +9,8 @@ abstract class BaseRideRepository {
   Future<Either<DomainError, List<Ride>>> getMyRidesRepo(String userId);
   Future<Either<DomainError, List<Checking>>> getMyCheckingsRepo(String userId);
   Future<Either<DomainError, Ride>> addRideRepo(Ride ride);
+  Future<Either<DomainError, bool>> cancelCheckingRepo(String rideId);
+  
 
   Future<Either<DomainError, List<Ride>>> findRideRepo(
     String? fromPlace,

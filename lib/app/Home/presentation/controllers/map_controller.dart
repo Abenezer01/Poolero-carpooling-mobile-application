@@ -305,6 +305,7 @@ class MapController extends GetxController {
           backgroundColor: AppTheme.accentColor, colorText: Colors.white);
     }, (r) {
       homeController.myRides.add(r);
+      homeController.myRides.refresh();
       Get.snackbar(
         'New Ride',
         'Your ride was added successfully',
@@ -314,7 +315,6 @@ class MapController extends GetxController {
         margin: const EdgeInsets.all(10),
         duration: const Duration(seconds: 2),
       );
-
       Get.toNamed('/home');
     });
     isLoading.value = false;
@@ -345,4 +345,41 @@ class MapController extends GetxController {
   }
 
   void CheckInRide({required String rideId, required int requestedSeats}) {}
+
+  void RouteRide(Place fromPlacePos, Place toPlacePos) {
+    print('RouteRide');
+    print(fromPlacePos);
+    print(toPlacePos);
+
+    origin!.value = Marker(
+        markerId: const MarkerId('origin'),
+        infoWindow: const InfoWindow(title: 'origin'),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet),
+        position: LatLng(double.parse(fromPlacePos.latitude.toString()),
+            double.parse(fromPlacePos.longitude.toString())));
+    destination!.value = Marker(
+        markerId: const MarkerId('destination'),
+        infoWindow: const InfoWindow(title: 'destination'),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+        position: LatLng(toPlacePos.latitude, toPlacePos.longitude));
+    directions = Directions().obs;
+    drawPoylines();
+    focusOnMap.value = false;
+    exploreRide.value = true;
+
+    fromPosition = {
+      'city': fromPlacePos.city,
+      'adresse': fromPlacePos.adresse,
+      'latitude': fromPlacePos.latitude,
+      'longitude': fromPlacePos.longitude,
+    };
+    toPosition = {
+      'city': toPlacePos.city,
+      'adresse': toPlacePos.adresse,
+      'latitude': toPlacePos.latitude,
+      'longitude': toPlacePos.longitude,
+    };
+
+    Get.toNamed('/map');
+  }
 }

@@ -13,6 +13,7 @@ class MyCheckingsPage extends GetWidget<HomeController> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      physics: ScrollPhysics(),
       child: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Column(
@@ -21,7 +22,7 @@ class MyCheckingsPage extends GetWidget<HomeController> {
               () => !controller.isLoading.value &&
                       controller.myCheckings.isNotEmpty
                   ? ListView.builder(
-                      scrollDirection: Axis.vertical,
+                      physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       padding: const EdgeInsets.symmetric(
                           horizontal: 15, vertical: 10),
@@ -45,7 +46,8 @@ class MyCheckingsPage extends GetWidget<HomeController> {
                                   ),
                                   Expanded(
                                     child: Text(
-                                      controller.myCheckings[index].ride.fromPlace.adresse,
+                                      controller.myCheckings[index].ride
+                                          .fromPlace.adresse,
                                       style: TextStyle(
                                         fontFamily: AppTheme.primaryFont,
                                         fontSize: 18,
@@ -84,7 +86,8 @@ class MyCheckingsPage extends GetWidget<HomeController> {
                                   ),
                                   Expanded(
                                     child: Text(
-                                      controller.myCheckings[index].ride.toPlace.adresse,
+                                      controller.myCheckings[index].ride.toPlace
+                                          .adresse,
                                       style: TextStyle(
                                         fontFamily: AppTheme.primaryFont,
                                         fontSize: 18,

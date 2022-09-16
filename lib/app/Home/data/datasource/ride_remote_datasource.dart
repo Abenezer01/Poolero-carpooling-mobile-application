@@ -13,6 +13,8 @@ abstract class BaseRideRemoteDataSource {
   Future<List<RideModel>> getMyRides(String userId);
   Future<List<CheckingModel>> getMyChecking(String userId);
   Future<Ride> addRide(Ride ride);
+  Future<bool> cancelChecking(String rideId);
+
   Future<List<RideModel>> findRides(String? fromPlace, String? toPlace,
       String? departureDate, int? requestedSeats, String? driverId);
 }
@@ -153,6 +155,29 @@ class RideRemoteDataSource extends BaseRideRemoteDataSource {
       return List<RideModel>.from(
           (jsonDecode(AppConstants.httpResponseHandler(response)) as List)
               .map((e) => RideModel.fromJson(e)));
+    } on DioError catch (error) {
+      debugPrint(error.toString());
+      if (error.type == DioErrorType.connectTimeout) {
+        throw HttpError.timeOut();
+      } else {
+        throw HttpError.serverError();
+      }
+    } on HttpError catch (error) {
+      debugPrint(error.toString());
+      rethrow;
+    }
+  }
+
+  @override
+  Future<bool> cancelChecking(String rideId) async {
+    try {
+      print("RideRemoteDataSource");
+      http.Response response = await http.delete(
+        Uri.parse(AppConstants.deleteCheckingPath(rideId)),
+        headers: AppConstants.headers,
+      );
+      AppConstants.httpResponseHandler(response);
+      return true;
     } on DioError catch (error) {
       debugPrint(error.toString());
       if (error.type == DioErrorType.connectTimeout) {

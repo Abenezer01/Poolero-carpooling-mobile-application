@@ -126,9 +126,10 @@ class FindRideView extends GetView<MapController> {
                         isDisabled: false,
                         textTitle: 'Route',
                         onPresse: () async {
-                          // Get.to(RiderView(
-                          //     fromPlace: rides[index]['fromPlace'],
-                          //     toPlace: rides[index]['toPlace']));
+                          print('FIND RIDE');
+                          controller.RouteRide(
+                              controller.ridesList[index].fromPlace,
+                              controller.ridesList[index].toPlace);
                         }),
                     MyButton(
                       isPrimary: true,
@@ -137,7 +138,7 @@ class FindRideView extends GetView<MapController> {
                       onPresse: () {
                         PaymentController payController = PaymentController();
                         payController.makePayment(amount: '5', currency: 'USD');
-                        
+
                         // controller.CheckInRide(
                         //   rideId: controller.rides[index]['id'],
                         //   requestedSeats: requestedSeats,

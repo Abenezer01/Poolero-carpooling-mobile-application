@@ -118,10 +118,14 @@ class HomeView extends GetView<HomeController> {
                     child: SafeArea(
                       bottom: false,
                       child: Center(
-                          child: FloatingActionButton(
+                          child: TextButton(
                         child: Text('Start Chating..'),
                         onPressed: () {
                           // controller.chating();
+                          Get.toNamed('/chat', arguments: {
+                            // 'userTarget': 'cc4b6ecc-0523-49a7-a4de-18c8cff17541'
+                            'userTarget': 'fe98f549-e790-4e9f-aa16-18c2292a2ee9'
+                          });
                         },
                       )),
                     ),

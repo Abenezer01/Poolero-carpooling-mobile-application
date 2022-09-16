@@ -1,6 +1,7 @@
 import 'package:carpooling_beta/app/Auth/presentation/bindings/login_binding.dart';
 import 'package:carpooling_beta/app/Auth/presentation/screens/login_view.dart';
 import 'package:carpooling_beta/app/Auth/presentation/bindings/register_binding.dart';
+import 'package:carpooling_beta/app/Chat/presentation/screens/chat_view.dart';
 import 'package:carpooling_beta/app/Home/presentation/bindings/home_binding.dart';
 import 'package:carpooling_beta/app/Home/presentation/bindings/map_binding.dart';
 import 'package:carpooling_beta/app/Auth/presentation/screens/register_view.dart';
@@ -10,6 +11,7 @@ import 'package:carpooling_beta/app/Profile/presentation/bindings/profile_bindin
 import 'package:carpooling_beta/app/Profile/presentation/bindings/car_binding.dart';
 import 'package:carpooling_beta/app/Profile/presentation/screens/profile_view.dart';
 import 'package:carpooling_beta/app/Profile/presentation/screens/car_view.dart';
+import 'package:carpooling_beta/app/Chat/presentation/bindings/chat_binding.dart';
 import 'package:get/get.dart';
 part 'app_routes.dart';
 
@@ -49,6 +51,11 @@ class AppPages {
       name: _Paths.MAP,
       page: () => const MapView(),
       binding: MapBinding(),
+    ),
+    GetPage(
+      name: _Paths.CHAT,
+      page: () => const ChatView(),
+      binding: ChatBinding(),
     ),
   ];
 }
