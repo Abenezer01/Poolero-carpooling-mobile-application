@@ -6,6 +6,7 @@ class MessageField {
 
 class Message {
   final String idUser;
+  final String toUser;
   final String urlAvatar;
   final String username;
   String message;
@@ -13,6 +14,7 @@ class Message {
 
   Message({
     required this.idUser,
+    required this.toUser,
     required this.urlAvatar,
     required this.username,
     required this.message,
@@ -21,6 +23,7 @@ class Message {
 
   static Message fromJson(Map<String, dynamic> json) => Message(
         idUser: json['idUser'],
+        toUser: json['toUser'],
         urlAvatar: json['urlAvatar'],
         username: json['username'],
         message: json['message'],
@@ -29,6 +32,7 @@ class Message {
 
   Map<String, dynamic> toJson() => {
         'idUser': idUser,
+        'toUser': toUser,
         'urlAvatar': urlAvatar,
         'username': username,
         'message': message,

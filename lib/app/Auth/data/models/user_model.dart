@@ -26,7 +26,7 @@ class UserModel extends User {
         lastName: json['lastName'],
         email: json['email'],
         username: json['userName'],
-        token: json['token'],
+        token: json['token'] ?? '',
         phoneNumber: json['phoneNumber'] ?? '',
         driverLicense: json['driverLicense'] ?? '',
         profileImg: json['profileImg'] ?? 'assets/userImg.png',

@@ -1,3 +1,6 @@
+import 'package:carpooling_beta/app/Home/domain/entities/Passager.dart';
+import 'package:carpooling_beta/app/Home/domain/usecases/add_checkings_usecase.dart';
+import 'package:carpooling_beta/app/Home/presentation/controllers/payment_controller.dart';
 import 'package:carpooling_beta/app/Profile/presentation/controllers/profile_controller.dart';
 import 'package:carpooling_beta/app/core/local_database/models/user.dart';
 import 'package:carpooling_beta/app/Home/domain/entities/Place.dart';
@@ -47,6 +50,7 @@ class MapController extends GetxController {
   RxList ridesList = [].obs;
   String? startTime, endTime;
   User? user;
+  final homeController = Get.find<HomeController>();
 
   @override
   void onInit() async {
@@ -68,9 +72,9 @@ class MapController extends GetxController {
     allowBigBags = false.obs;
     allowSmocking = false.obs;
     choosedCar = ''.obs;
-    ProfileController profileController = Get.find<ProfileController>();
-    carsList.value = profileController.carsList;
-    user = profileController.user;
+
+    user = homeController.profile.user;
+    carsList.value = homeController.profile.carsList;
     isLoading.value = false;
   }
 
@@ -271,7 +275,6 @@ class MapController extends GetxController {
   }
 
   void addRide() async {
-    HomeController homeController = HomeController();
     final newRide = Ride(
       id: '',
       departureDate: startTime!,
@@ -294,11 +297,12 @@ class MapController extends GetxController {
       ),
       car: choosedCar.value,
       driver: user!.id,
-      status: 'status',
+      status: Status.Planned.index,
       allowPauses: allowPauses.value,
       allowBigBags: allowBigBags.value,
       allowSmoking: allowSmocking.value,
     );
+
     final ride = await AddRideUseCase(serviceLocator())(newRide);
     ride.fold((l) {
       Get.snackbar('Error occurred', l.message,
@@ -306,6 +310,7 @@ class MapController extends GetxController {
     }, (r) {
       homeController.myRides.add(r);
       homeController.myRides.refresh();
+      print(homeController.myRides);
       Get.snackbar(
         'New Ride',
         'Your ride was added successfully',
@@ -315,6 +320,8 @@ class MapController extends GetxController {
         margin: const EdgeInsets.all(10),
         duration: const Duration(seconds: 2),
       );
+      homeController.pageId.value = 'My rides';
+      homeController.update();
       Get.toNamed('/home');
     });
     isLoading.value = false;
@@ -344,7 +351,41 @@ class MapController extends GetxController {
     isLoading.value = false;
   }
 
-  void CheckInRide({required String rideId, required int requestedSeats}) {}
+  void pay(int seats, double price, Ride ride) {
+    int amount = (seats * price).round();
+    print('AMOUNT: $amount');
+    PaymentController payController = PaymentController();
+    payController
+        .makePayment(amount: amount.toString(), currency: 'MAD')
+        .then((value) {
+      CheckInRide(seats, ride);
+    });
+  }
+
+  void CheckInRide(int requestedSeats, Ride ride) async {
+    final newChecking = await AddCheckingUseCase(serviceLocator())(
+      ride,
+      requestedSeats,
+      Passager(
+          id: user!.id,
+          firstName: user!.firstName,
+          lastName: user!.lastName,
+          userName: user!.username,
+          email: user!.email),
+    );
+
+    newChecking.fold((l) {
+      Get.snackbar('Error occurred', l.message,
+          backgroundColor: AppTheme.accentColor, colorText: Colors.white);
+    }, (r) {
+      final homeController = Get.find<HomeController>();
+      homeController.myCheckings.add(r);
+      homeController.myCheckings.refresh();
+      homeController.pageId.value = 'Checkings';
+      homeController.update();
+      Get.toNamed('/home');
+    });
+  }
 
   void RouteRide(Place fromPlacePos, Place toPlacePos) {
     print('RouteRide');

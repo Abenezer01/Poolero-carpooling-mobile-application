@@ -1,3 +1,4 @@
+import 'package:carpooling_beta/app/Chat/domain/entities/Message.dart';
 import 'package:carpooling_beta/app/Home/presentation/components/static_widgets.dart';
 import 'package:carpooling_beta/app/Home/presentation/controllers/home_controller.dart';
 import 'package:carpooling_beta/app/Home/presentation/components/main_page.dart';
@@ -31,48 +32,6 @@ class HomeView extends GetView<HomeController> {
           elevation: 0.5,
           actions: [MyActions()],
         ),
-        // floatingActionButton: SpeedDial(
-        //   animatedIcon: AnimatedIcons.menu_close,
-        //   gradient: PrimaryColorGradient,
-        //   gradientBoxShape: BoxShape.circle,
-        //   // backgroundColor: PrimaryColor2,
-        //   // foregroundColor: PrimaryColor,
-        //   overlayColor: Colors.black,
-        //   overlayOpacity: .1,
-        //   spacing: 12,
-        //   elevation: 10,
-        //   children: [
-        //     SpeedDialChild(
-        //       child: Icon(Icons.add_location_alt_outlined),
-        //       label: 'Add a trip',
-        //       foregroundColor: PrimaryColor,
-        //       onTap: () => Get.toNamed('/rider'),
-        //     ),
-        //     SpeedDialChild(
-        //       child: Icon(Icons.garage_rounded),
-        //       label: 'My vehicles',
-        //       foregroundColor: PrimaryColor,
-        //       onTap: () => Get.toNamed('/profile'),
-        //     ),
-        //     SpeedDialChild(
-        //       child: Icon(Icons.chat),
-        //       label: 'Chat',
-        //       foregroundColor: PrimaryColor,
-        //       onTap: () {
-        //         controller.advancedDrawerController.hideDrawer();
-        //         controller.tabController.animateTo(3,
-        //             duration: Duration(milliseconds: 700),
-        //             curve: Curves.easeIn);
-        //       },
-        //     ),
-        //     SpeedDialChild(
-        //       child: Icon(Icons.location_history),
-        //       label: 'My ride',
-        //       foregroundColor: PrimaryColor,
-        //     ),
-        //   ],
-        // ),
-
         extendBody: true,
         bottomNavigationBar: Container(
           decoration: BoxDecoration(boxShadow: [
@@ -84,58 +43,73 @@ class HomeView extends GetView<HomeController> {
           ]),
           child: BottomBar(),
         ),
-        body: Builder(
-          builder: (context) {
-            return Obx(() {
-              switch (controller.pageId.value) {
-                case 'Home':
-                  return Container(
-                    margin: EdgeInsets.only(bottom: 50),
-                    child: SafeArea(
-                      bottom: false,
-                      child: MainPage(),
-                    ),
-                  );
-                case 'My rides':
-                  return Container(
-                    margin: EdgeInsets.only(bottom: 50),
-                    child: SafeArea(
-                      bottom: false,
-                      child: MyRidesPage(),
-                    ),
-                  );
-                case 'Checkings':
-                  return Container(
-                    margin: EdgeInsets.only(bottom: 50),
-                    child: SafeArea(
-                      bottom: false,
-                      child: MyCheckingsPage(),
-                    ),
-                  );
-                case 'Contacts':
-                  return Container(
-                    margin: EdgeInsets.only(bottom: 50),
-                    child: SafeArea(
-                      bottom: false,
-                      child: Center(
+        body: Obx(() {
+          switch (controller.pageId.value) {
+            case 'Home':
+              return Container(
+                child: SafeArea(
+                  bottom: false,
+                  child: MainPage(),
+                ),
+              );
+            case 'My rides':
+              return Container(
+                margin: EdgeInsets.only(bottom: 50),
+                child: SafeArea(
+                  bottom: false,
+                  child: MyRidesPage(),
+                ),
+              );
+            case 'Checkings':
+              return Container(
+                margin: EdgeInsets.only(bottom: 50),
+                child: SafeArea(
+                  bottom: false,
+                  child: MyCheckingsPage(),
+                ),
+              );
+            case 'Contacts':
+              return Container(
+                margin: EdgeInsets.only(bottom: 50),
+                child: SafeArea(
+                  bottom: false,
+                  child: controller.myConversations.isEmpty
+                      ? Center(
                           child: TextButton(
-                        child: Text('Start Chating..'),
-                        onPressed: () {
-                          // controller.chating();
-                          Get.toNamed('/chat', arguments: {
-                            // 'userTarget': 'cc4b6ecc-0523-49a7-a4de-18c8cff17541'
-                            'userTarget': 'fe98f549-e790-4e9f-aa16-18c2292a2ee9'
-                          });
-                        },
-                      )),
-                    ),
-                  );
-                default:
-                  return Container();
-              }
-            });
-          },
-        ),
+                              onPressed: () {
+                                Get.toNamed('/chat', arguments: {
+                                  'userTarget':
+                                      'cc4b6ecc-0523-49a7-a4de-18c8cff17541',
+                                });
+                              },
+                              child: Text('You have no conversations yet..')),
+                        )
+                      : ListView.builder(
+                          // physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 10),
+                          itemCount: controller.myConversations.length,
+                          itemBuilder: (BuildContext buildContext, index) {
+                            print('CONVERSATION:');
+                            Message conversation =
+                                controller.myConversations[index];
+                            return GestureDetector(
+                                onTap: () {
+                                  Get.toNamed('/chat', arguments: {
+                                    'userTarget':
+                                        'cc4b6ecc-0523-49a7-a4de-18c8cff17541',
+                                  });
+                                },
+                                child: Text(
+                                    'myConversations with ${conversation.username}'));
+                          }),
+                ),
+              );
+            default:
+              return Container();
+          }
+        }),
       ),
     );
   }

@@ -29,8 +29,7 @@ class ChatRepository extends BaseChatRepository {
     try {
       final newMessage = await baseChatRemoteDataSource.sendMessage(
           fromUserId, toUserId, message);
-      print('sendMessageRepo');
-      print(newMessage);
+          
       return Right(newMessage);
     } on DomainError catch (e) {
       print(e.message);
@@ -40,12 +39,11 @@ class ChatRepository extends BaseChatRepository {
 
   
   @override
-  Future<Either<DomainError, List<User>>> chatConversationsRepo(userId) async {
+  Future<Either<DomainError, List<Message>>> chatConversationsRepo(userId) async {
     try {
       final conversations = await baseChatRemoteDataSource.getConversations(
           userId);
-      print('chatConversationsRepo');
-      print(conversations);
+          
       return Right(conversations);
     } on DomainError catch (e) {
       print(e.message);

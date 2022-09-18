@@ -2,6 +2,12 @@ import 'package:equatable/equatable.dart';
 import 'package:carpooling_beta/app/Home/domain/entities/Place.dart';
 import 'package:carpooling_beta/app/Home/domain/entities/Passager.dart';
 
+enum Status {
+  Planned,
+  In_Progress,
+  Finished,
+}
+
 class Ride extends Equatable {
   final String id;
   final String departureDate;
@@ -19,7 +25,7 @@ class Ride extends Equatable {
   final String car;
   final String driver;
   final List<Passager> passagers;
-  final String status;
+  final int status;
 
   const Ride({
     required this.id,

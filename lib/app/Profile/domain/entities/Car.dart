@@ -1,4 +1,7 @@
 import 'package:carpooling_beta/app/Profile/domain/entities/CarProperty.dart';
+import 'package:carpooling_beta/app/Profile/domain/entities/Color.dart';
+import 'package:carpooling_beta/app/Profile/domain/entities/Model.dart';
+import 'package:carpooling_beta/app/Profile/domain/entities/Mark.dart';
 import 'package:equatable/equatable.dart';
 
 class Car extends Equatable {
@@ -10,9 +13,11 @@ class Car extends Equatable {
   String modelYear;
   final String userId;
   final String image;
+  final String plaque;
 
   Car({
     required this.id,
+    required this.plaque,
     required this.category,
     required this.color,
     required this.model,
@@ -32,6 +37,7 @@ class Car extends Equatable {
   @override
   List<Object?> get props => [
         id,
+        plaque,
         category,
         color,
         model,

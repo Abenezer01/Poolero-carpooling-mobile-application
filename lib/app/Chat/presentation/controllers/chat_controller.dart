@@ -1,11 +1,15 @@
-import 'package:carpooling_beta/app/Auth/domain/entities/User.dart';
 import 'package:carpooling_beta/app/Chat/data/models/message_model.dart';
 import 'package:carpooling_beta/app/Chat/domain/entities/Message.dart';
 import 'package:carpooling_beta/app/Chat/domain/usecases/get_messages_usecase.dart';
 import 'package:carpooling_beta/app/Chat/domain/usecases/send_message_usecase.dart';
 import 'package:carpooling_beta/app/Chat/domain/usecases/get_conversations_usecase.dart';
+import 'package:carpooling_beta/app/Home/presentation/controllers/home_controller.dart';
 import 'package:carpooling_beta/app/Profile/presentation/controllers/profile_controller.dart';
+import 'package:carpooling_beta/app/core/local_database/models/user.dart';
+import 'package:carpooling_beta/app/core/local_database/operations/user_operations.dart';
 import 'package:carpooling_beta/app/core/services/service_locator.dart';
+import 'package:carpooling_beta/app/core/theme.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -14,29 +18,24 @@ class ChatController extends GetxController {
 
   Stream<List<Message>>? messagesStream;
   RxList messages = [].obs;
+  // RxList conversationsList = [].obs;
   Message? message;
-  String? user;
+  User? user;
   String? userTarget;
   RxBool isMe = true.obs;
   final messageTextController = TextEditingController();
   final listViewController = ScrollController();
+  final homeController = Get.find<HomeController>();
 
   @override
   void onInit() async {
     super.onInit();
 
-    final profileController = Get.find<ProfileController>();
-
-    user = profileController.userId.value;
+    user = await UserLocalDataBaseOperations().get();
     userTarget = Get.arguments['userTarget'];
-    print('userTarget:');
-    print(Get.arguments['userTarget']);
-    // user = 'fe98f549-e790-4e9f-aa16-18c2292a2ee9';
-    // userTarget = 'cc4b6ecc-0523-49a7-a4de-18c8cff17541';
 
-    getMessages(user!, userTarget!);
-
-    getConversations(user!);
+    getMessages(user!.id, userTarget!);
+    getConversations(user!.id);
 
     isLoading.value = false;
   }
@@ -54,6 +53,21 @@ class ChatController extends GetxController {
   void getConversations(String userId) async {
     final conversations =
         await GetConversationsUseCase(serviceLocator())(userId);
+
+    conversations.fold((l) {
+      Get.snackbar(
+        'Chat Error',
+        l.message,
+        backgroundColor: AppTheme.accentColor,
+        colorText: AppTheme.naturalColor5,
+      );
+    }, (r) {
+      print('CHATCONTROLLER:');
+      homeController.myConversations.clear();
+      homeController.myConversations.addAll(r);
+      homeController.myConversations.refresh();
+      print(homeController.myConversations);
+    });
   }
 
   void getMessages(String fromUser, String toUser) async {
@@ -61,45 +75,60 @@ class ChatController extends GetxController {
         await GetMessagesUseCase(serviceLocator())(fromUser, toUser);
 
     messagesList.fold((l) {
-      print(l.message);
+      Get.snackbar(
+        'Chat Error',
+        l.message,
+        backgroundColor: AppTheme.accentColor,
+        colorText: AppTheme.naturalColor5,
+      );
     }, (r) {
       messages.bindStream(r);
       messages.refresh();
-      // print('----MESSAGES----');
-      // for (Message msg in messages) {
-      //   print('Message');
-      //   print(msg.message);
-      // }
+      animateListView();
     });
   }
 
   void sendMessage(String fromUser, String toUser, String message) async {
+    print('sendMessage-controller: $fromUser - $fromUser');
     final newMessage =
         await SendMessageUseCase(serviceLocator())(fromUser, toUser, message);
 
     newMessage.fold((l) {
       print(l.message);
-    }, (r) {
-      messages.insert(
-          0,
-          MessageModel(
-              idUser: r.idUser,
-              urlAvatar: r.urlAvatar,
-              username: r.username,
-              message: r.message,
-              createdAt: r.createdAt));
+    }, (r) async {
+      final message = MessageModel(
+        idUser: r.idUser,
+        toUser: r.toUser,
+        urlAvatar: r.urlAvatar,
+        username: r.username,
+        message: r.message,
+        createdAt: r.createdAt,
+      );
+      messages.insert(0, message);
       messages.refresh();
       messageTextController.clear();
-      listViewController.animateTo(
-        listViewController.position.maxScrollExtent,
-        duration: Duration(seconds: 1),
-        curve: Curves.fastOutSlowIn,
-      );
-      // print('----MESSAGES----');
-      // for (Message msg in messages) {
-      //   print('Message');
-      //   print(msg.message);
-      // }
+      animateListView();
+      // getConversations();
+
+      homeController.myConversations.clear();
+      homeController.myConversations.addAll(user!.conversations);
+      homeController.myConversations.map((element) {
+        if (element.toUser == toUser) {
+          element = r;
+        } else {
+          homeController.myConversations.add(r);
+        }
+        homeController.myConversations.refresh();
+        return;
+      });
     });
+  }
+
+  void animateListView() {
+    listViewController.animateTo(
+      listViewController.position.maxScrollExtent,
+      duration: Duration(seconds: 1),
+      curve: Curves.fastOutSlowIn,
+    );
   }
 }

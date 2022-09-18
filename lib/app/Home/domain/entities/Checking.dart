@@ -1,5 +1,5 @@
+import 'package:carpooling_beta/app/Home/domain/entities/Passager.dart';
 import 'package:carpooling_beta/app/Home/domain/entities/Ride.dart';
-import 'package:carpooling_beta/app/Home/domain/entities/passager.dart';
 import 'package:equatable/equatable.dart';
 
 class Checking extends Equatable {

@@ -1,6 +1,11 @@
+import 'package:carpooling_beta/app/Chat/domain/entities/Message.dart';
+import 'package:carpooling_beta/app/Home/domain/entities/Checking.dart';
+import 'package:carpooling_beta/app/Home/domain/entities/Ride.dart';
 import 'package:carpooling_beta/app/Home/domain/usecases/cancel_checking_usecase.dart';
+import 'package:carpooling_beta/app/Profile/presentation/controllers/car_controller.dart';
 import 'package:carpooling_beta/app/Profile/presentation/controllers/profile_controller.dart';
 import 'package:carpooling_beta/app/core/components/my_button.dart';
+import 'package:carpooling_beta/app/core/local_database/models/user.dart';
 import 'package:carpooling_beta/app/core/local_database/operations/user_operations.dart';
 import 'package:carpooling_beta/app/core/services/service_locator.dart';
 import 'package:carpooling_beta/app/Home/domain/usecases/rides_usecase.dart';
@@ -13,50 +18,44 @@ import 'package:get/get.dart';
 class HomeController extends GetxController
     with GetSingleTickerProviderStateMixin {
   RxBool isLoading = false.obs;
-  late final AdvancedDrawerController advancedDrawerController;
+  final AdvancedDrawerController advancedDrawerController =
+      AdvancedDrawerController();
+  late final User? user;
   RxString username = ''.obs;
   RxString token = ''.obs;
   RxString userId = ''.obs;
   late final TabController tabController =
       TabController(vsync: this, length: 4);
   RxString pageId = 'Home'.obs;
-  late final RxList<dynamic> myRides = [].obs;
-  late final RxList<dynamic> myCheckings = [].obs;
+  late final RxList<Ride> ridesList = (List<Ride>.empty(growable: true)).obs;
+  late final RxList<Ride> myRides = (List<Ride>.empty(growable: true)).obs;
+  late final RxList<Checking> myCheckings =
+      (List<Checking>.empty(growable: true)).obs;
+  late final RxList<Message> myConversations =
+      (List<Message>.empty(growable: true)).obs;
   RxString checkingId = ''.obs;
+  late final ProfileController profile;
 
   @override
   void onInit() async {
     super.onInit();
-    Get.lazyPut(() => ProfileController());
-    advancedDrawerController = AdvancedDrawerController();
+    profile = Get.put<ProfileController>(ProfileController());
 
-    ProfileController profileController = Get.find<ProfileController>();
-    profileController.getProfileInfos().then((value) {
-      final user = profileController.user;
-      // final user = await UserLocalDataBaseOperations().get();
-      username.value = user.username;
-      token.value = user.token;
-      userId.value = user.id;
-    });
+    profile.getProfileInfos().then((value) async {
+      user = profile.user;
+      username.value = user!.username;
+      userId.value = user!.id;
 
-    final myRidesList = await RidesUseCase(serviceLocator())(userId.value);
-    myRidesList.fold((l) {
-      Get.snackbar('Error occurred', l.message,
-          backgroundColor: AppTheme.accentColor, colorText: Colors.white);
-    }, (r) {
-      print(r);
-      myRides.addAll(r);
-    });
+      getCheckingList();
+      getConversations();
 
-    final myCheckingsList =
-        await CheckingsUseCase(serviceLocator())(userId.value);
-    myCheckingsList.fold((l) {
-      Get.snackbar('Error occurred', l.message);
-    }, (r) {
-      print(r);
-      myCheckings.addAll(r);
+      ridesList.clear();
+      ridesList.addAll(await getRidesList('Tangier', 'Tangier', null, 0, null));
+      myRides.clear();
+      myRides.addAll(await getRidesList(null, null, null, 0, userId.value));
+
+      isLoading.value = false;
     });
-    isLoading.value = false;
   }
 
   @override
@@ -67,6 +66,38 @@ class HomeController extends GetxController
   @override
   void onClose() {
     super.onClose();
+  }
+
+  Future<List<Ride>> getRidesList(String? fromPlace, String? toPlace,
+      String? date, int requestedSeats, String? driverId) async {
+    final rides = await GetRidesUseCase(serviceLocator())(
+        fromPlace, toPlace, date, requestedSeats, driverId);
+    return rides.fold((l) {
+      Get.snackbar('Error occurred', l.message,
+          backgroundColor: AppTheme.accentColor, colorText: Colors.white);
+      return [];
+    }, (r) {
+      return r;
+    });
+  }
+
+  void getCheckingList() async {
+    final myCheckingsList =
+        await CheckingsUseCase(serviceLocator())(userId.value);
+    myCheckingsList.fold((l) {
+      Get.snackbar('Error occurred', l.message);
+    }, (r) {
+      print(r);
+      myCheckings.addAll(r);
+    });
+  }
+
+  void getConversations() async {
+    final conversations = user!.conversations;
+    print('Conversations:');
+    print(conversations);
+    myConversations.clear();
+    myConversations.addAll(conversations);
   }
 
   void questionDialog() => Get.defaultDialog(

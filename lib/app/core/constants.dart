@@ -8,7 +8,7 @@ class AppConstants {
 
   static const String googleDirectionsBaseUrl =
       'https://maps.googleapis.com/maps/api/directions/json';
-  static const String baseUrl = 'https://192.168.1.39:45455/api';
+  static const String baseUrl = 'https://192.168.1.39:45456/api';
 
   static const Map<String, String> headers = {
     'Content-Type': 'application/json; charset=UTF-8',
@@ -28,6 +28,7 @@ class AppConstants {
   static const String getCheckingsPath = '$baseUrl/CheckIn/GetAllCheckIns';
   static const String addRidePath = '$baseUrl/Ride';
   static String deleteCheckingPath(String id) => '$baseUrl/CheckIn/$id';
+  static const String addCheckingPath = '$baseUrl/CheckIn';
 
   static dynamic httpResponseHandler(http.Response response) {
     if (response.statusCode == 200 ||

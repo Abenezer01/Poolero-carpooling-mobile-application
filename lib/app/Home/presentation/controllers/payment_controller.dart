@@ -15,8 +15,9 @@ class PaymentController extends GetxController {
       print(paymentIntentData);
 
       if (paymentIntentData != null) {
-        await Stripe.instance.initPaymentSheet(
-            paymentSheetParameters: SetupPaymentSheetParameters(
+        await Stripe.instance
+            .initPaymentSheet(
+                paymentSheetParameters: SetupPaymentSheetParameters(
           // applePay: true,
           // googlePay: true,
           // testEnv: true,
@@ -25,15 +26,17 @@ class PaymentController extends GetxController {
           customerId: paymentIntentData!['customer'],
           paymentIntentClientSecret: paymentIntentData!['client_secret'],
           customerEphemeralKeySecret: paymentIntentData!['ephemeralKey'],
-        ));
-        displayPaymentSheet();
+        ))
+            .then((value) {
+          displayPaymentSheet();
+        });
       }
     } catch (e, s) {
       print('exception:$e$s');
     }
   }
 
-  displayPaymentSheet() async {
+  Future<void> displayPaymentSheet() async {
     try {
       print('displayPaymentSheet');
       await Stripe.instance.presentPaymentSheet();

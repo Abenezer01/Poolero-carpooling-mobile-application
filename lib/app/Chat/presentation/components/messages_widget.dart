@@ -31,12 +31,10 @@ class MessagesWidget extends GetView<ChatController> {
                   //   return SizedBox();
                   // }
                   controller.message = controller.messages[index];
-                  print(
-                      'PRINTING MSGS: ${controller.message!.message} - ISME: ${controller.isMe.value} - ${controller.message!.username} ${controller.message!.createdAt}');
-
+                  
                   controller.isMe.value =
-                      (controller.message!.idUser == controller.user);
-                  print('ISME: ${controller.isMe.value}');
+                      (controller.message!.idUser == controller.user!.id);
+                      
                   return MessageWidget();
                 },
               ),

@@ -6,6 +6,7 @@ class CarPropertyModel extends CarProperty {
   CarPropertyModel({
     required super.id,
     required super.name,
+    super.mark,
   });
 
   factory CarPropertyModel.fromJson(Map<String, dynamic> json) {
@@ -13,10 +14,11 @@ class CarPropertyModel extends CarProperty {
       if (!json.containsKey('id')) {
         throw DataError.missingParameters();
       }
+
       return CarPropertyModel(
-        id: json['id'],
-        name: json['name'],
-      );
+          id: json['id'],
+          name: json['name'],
+          mark: json.containsKey('mark') ? json['mark']['id'] : null);
     } on DataError catch (e) {
       debugPrint(e.toString());
       rethrow;

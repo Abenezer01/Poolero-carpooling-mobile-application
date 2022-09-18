@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 class CarModel extends Car {
   CarModel({
     required super.id,
+    required super.plaque,
     required super.category,
     required super.color,
     required super.model,
@@ -21,6 +22,7 @@ class CarModel extends Car {
       }
       return CarModel(
         id: json['id'],
+        plaque: json['licensePlate'],
         category: CarProperty(
             id: json['category']['id'], name: json['category']['name']),
         color:

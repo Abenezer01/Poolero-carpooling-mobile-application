@@ -1,4 +1,4 @@
-import 'package:carpooling_beta/app/Home/domain/entities/passager.dart';
+import 'package:carpooling_beta/app/Home/domain/entities/Passager.dart';
 import 'package:carpooling_beta/app/core/error_handling/data_error.dart';
 import 'package:flutter/foundation.dart';
 

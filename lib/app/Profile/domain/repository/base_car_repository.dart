@@ -1,7 +1,11 @@
+
 import 'package:carpooling_beta/app/Profile/domain/entities/Car.dart';
 import 'package:carpooling_beta/app/Profile/domain/entities/CarProperty.dart';
+import 'package:carpooling_beta/app/Profile/domain/entities/Mark.dart';
+import 'package:carpooling_beta/app/Profile/domain/entities/Model.dart';
 import 'package:carpooling_beta/app/core/error_handling/domain_error.dart';
 import 'package:dartz/dartz.dart';
+import 'package:flutter/material.dart';
 
 abstract class BaseCarRepository {
   Future<Either<DomainError, List<CarProperty>>> carCategoriesRepo();

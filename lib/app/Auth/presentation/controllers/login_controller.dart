@@ -1,6 +1,3 @@
-import 'package:carpooling_beta/app/Auth/data/datasource/auth_remote_datasource.dart';
-import 'package:carpooling_beta/app/Auth/data/repository/auth_repository.dart';
-import 'package:carpooling_beta/app/Auth/domain/repository/base_auth_repository.dart';
 import 'package:carpooling_beta/app/Auth/domain/usecases/login_usecase.dart';
 import 'package:carpooling_beta/app/core/error_handling/validation_error.dart';
 import 'package:carpooling_beta/app/core/services/service_locator.dart';

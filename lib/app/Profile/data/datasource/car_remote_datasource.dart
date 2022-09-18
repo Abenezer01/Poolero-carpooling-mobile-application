@@ -4,6 +4,7 @@ import 'package:carpooling_beta/app/Profile/domain/entities/Car.dart';
 import 'package:carpooling_beta/app/Profile/domain/entities/CarProperty.dart';
 import 'package:carpooling_beta/app/core/constants.dart';
 import 'package:carpooling_beta/app/core/error_handling/http_error.dart';
+import 'package:carpooling_beta/app/core/local_database/operations/user_operations.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
@@ -23,9 +24,11 @@ class CarRemoteDataSource extends BaseCarRemoteDataSource {
         Uri.parse(propertyPath),
         headers: AppConstants.headers,
       );
+
       return List<CarProperty>.from(
           (jsonDecode(AppConstants.httpResponseHandler(response)) as List)
               .map((e) => CarPropertyModel.fromJson(e)));
+      ;
     } on DioError catch (error) {
       debugPrint(error.toString());
       if (error.type == DioErrorType.connectTimeout) {
@@ -53,9 +56,15 @@ class CarRemoteDataSource extends BaseCarRemoteDataSource {
           "modelYear": car.modelYear,
         }),
       );
-      print(response.statusCode);
+
       final carId = AppConstants.httpResponseHandler(response);
       car.setId = carId;
+
+      // Save to local DB
+      final user = await UserLocalDataBaseOperations().get();
+      user!.cars!.add(car);
+      user.save();
+
       return car;
     } on DioError catch (error) {
       debugPrint(error.toString());
@@ -86,9 +95,17 @@ class CarRemoteDataSource extends BaseCarRemoteDataSource {
         }),
       );
 
-      print('DATASOURCE-UPDATED-CAR: $car');
-      print(response.statusCode);
       AppConstants.httpResponseHandler(response);
+
+      // Update on local DB
+      final user = await UserLocalDataBaseOperations().get();
+      user!.cars!.map((element) {
+        if (element.id == car.id) {
+          element = car;
+        }
+      });
+      user.save();
+
       return car;
     } on DioError catch (error) {
       debugPrint(error.toString());
@@ -112,6 +129,12 @@ class CarRemoteDataSource extends BaseCarRemoteDataSource {
       );
 
       AppConstants.httpResponseHandler(response);
+
+      // Delete from local DB
+      final user = await UserLocalDataBaseOperations().get();
+      user!.cars!.removeWhere((element) => element.id == carId);
+      user.save();
+
       return true;
     } on DioError catch (error) {
       debugPrint(error.toString());

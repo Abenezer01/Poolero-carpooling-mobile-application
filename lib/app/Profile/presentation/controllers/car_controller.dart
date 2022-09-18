@@ -10,32 +10,36 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class CarController extends GetxController {
-  RxBool isLoading = false.obs;
-  late final RxList categories = [].obs;
-  late final RxList colors = [].obs;
-  late final RxList marks = [].obs;
-  late final RxList models = [].obs;
+  RxBool isLoading = true.obs;
+  late final RxList<CarProperty> categories = List<CarProperty>.empty().obs;
+  late final RxList<CarProperty> colors = List<CarProperty>.empty().obs;
+  late final RxList<CarProperty> marks = List<CarProperty>.empty().obs;
+  late final RxList<CarProperty> models = List<CarProperty>.empty().obs;
+  late final RxList<CarProperty> marksModels = List<CarProperty>.empty().obs;
+  late String userId = '';
 
-  late TextEditingController modelYearController;
+  late TextEditingController licensePlateController, modelYearController;
 
-  ProfileController profileController = Get.find<ProfileController>();
+  late ProfileController profileController;
   Rx<Car> car = Car(
     id: '',
+    plaque: '',
     category: CarProperty(id: '', name: ''),
     color: CarProperty(id: '', name: ''),
     model: CarProperty(id: '', name: ''),
     mark: CarProperty(id: '', name: ''),
     modelYear: '',
-    userId: Get.arguments['userId'],
+    userId: '',
   ).obs;
 
   @override
   void onInit() async {
+    licensePlateController = TextEditingController();
     modelYearController = TextEditingController();
-    if (!Get.arguments['addCar']) {
-      car.value = Get.arguments['car'];
-      modelYearController.text = car.value.modelYear;
-    }
+    car.value = Get.arguments['car'];
+    userId = Get.arguments['userId'];
+    licensePlateController.text = car.value.plaque;
+    modelYearController.text = car.value.modelYear;
 
     final carProperties = await serviceLocator<CarUseCase>().getCarProperties();
     carProperties.fold((l) {
@@ -54,6 +58,8 @@ class CarController extends GetxController {
             break;
           case 'models':
             models.value = value;
+            marksModels.clear();
+            marksModels.addAll(value);
             break;
           default:
             break;
@@ -65,6 +71,22 @@ class CarController extends GetxController {
     super.onInit();
   }
 
+  void loadModels(String markId) {
+    marksModels.value = [];
+    marksModels.refresh();
+    print('ELEMENT0');
+    print(models.length);
+    for (var mod in models) {
+      print('ELEMENT');
+      if (mod.mark == markId) {
+        print(mod.mark! + ' // ' + markId);
+        marksModels.add(mod);
+        print(marksModels);
+      }
+    }
+    marksModels.refresh();
+  }
+
   addCar(Car car) async {
     car.setModelYear = modelYearController.value.text;
     print(car.modelYear);
@@ -73,15 +95,16 @@ class CarController extends GetxController {
     newCar.fold((l) {
       Get.snackbar('Error', l.message);
     }, (r) {
-      profileController.carsList.add(CarModel(
-        id: r.id,
-        category: r.category,
-        color: r.color,
-        mark: r.mark,
-        model: r.model,
-        modelYear: r.modelYear,
-        userId: r.userId,
-      ));
+      ProfileController().carsList.add(CarModel(
+            id: r.id,
+            plaque: r.plaque,
+            category: r.category,
+            color: r.color,
+            mark: r.mark,
+            model: r.model,
+            modelYear: r.modelYear,
+            userId: r.userId,
+          ));
       Get.snackbar('Sccess', 'Your Car was added successfully');
       Get.toNamed('/profile');
     });
@@ -92,12 +115,11 @@ class CarController extends GetxController {
     updatedCar.fold((l) {
       Get.snackbar('Error', l.message);
     }, (r) {
-      ProfileController profileController = Get.find<ProfileController>();
-      profileController.carsList.map((element) {
+      ProfileController().carsList.map((element) {
         if (element.id == r.id) {
-          print('Element.id: ${element.id} || r.id:${r.id}');
           element = CarModel(
             id: element.id,
+            plaque: element.plaque,
             category: r.category,
             color: r.color,
             mark: r.mark,
@@ -119,8 +141,10 @@ class CarController extends GetxController {
     idDeleted.fold((l) {
       Get.snackbar('Error', l.message);
     }, (r) {
-      ProfileController profileController = Get.find<ProfileController>();
-      profileController.carsList.removeWhere((element) => element.id == carId);
+      ProfileController()
+          .carsList
+          .removeWhere((element) => element.id == carId);
+
       Get.snackbar('Success', 'Your Car has been deleted successfully');
       Get.toNamed('/profile');
     });

@@ -1,6 +1,5 @@
 import 'package:carpooling_beta/app/Profile/domain/entities/Car.dart';
 import 'package:carpooling_beta/app/Profile/domain/entities/CarProperty.dart';
-import 'package:carpooling_beta/app/Profile/domain/entities/Profile.dart';
 import 'package:carpooling_beta/app/Profile/domain/repository/base_car_repository.dart';
 import 'package:carpooling_beta/app/core/error_handling/domain_error.dart';
 import 'package:dartz/dartz.dart';
@@ -62,6 +61,7 @@ class CarUseCase {
       rethrow;
     }
   }
+
   Future<Either<DomainError, bool>> deleteCar(String carId) async {
     try {
       return baseCarRepository.deleteCarRepo(carId);

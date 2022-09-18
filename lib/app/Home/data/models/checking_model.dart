@@ -1,3 +1,4 @@
+import 'package:carpooling_beta/app/Home/domain/entities/Passager.dart';
 import 'package:carpooling_beta/app/Home/domain/entities/checking.dart';
 import 'package:carpooling_beta/app/Home/data/models/ride_model.dart';
 import 'package:carpooling_beta/app/Home/data/models/passager_model.dart';
@@ -19,9 +20,16 @@ class CheckingModel extends Checking {
       }
       print('CheckingModel:');
       print(json);
+      final passager = PassagerModel.fromJson(json['passager']);
       return CheckingModel(
         id: json['id'],
-        passager: PassagerModel.fromJson(json['passager']),
+        passager: Passager(
+          id: passager.id,
+          firstName: passager.firstName,
+          lastName: passager.lastName,
+          userName: passager.userName,
+          email: passager.email,
+        ),
         ride: RideModel.fromJson(json['ride']),
         requestedSeats: json['requestedSeats'],
       );

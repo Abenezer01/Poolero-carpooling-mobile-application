@@ -7,6 +7,8 @@ import 'package:carpooling_beta/app/Home/presentation/bindings/map_binding.dart'
 import 'package:carpooling_beta/app/Auth/presentation/screens/register_view.dart';
 import 'package:carpooling_beta/app/Home/presentation/screens/home_view.dart';
 import 'package:carpooling_beta/app/Home/presentation/screens/map_view.dart';
+import 'package:carpooling_beta/app/OnBoarding/presentation/screens/onboarding_screen.dart';
+import 'package:carpooling_beta/app/OnBoarding/presentation/bindings/onboarding_binding.dart';
 import 'package:carpooling_beta/app/Profile/presentation/bindings/profile_binding.dart';
 import 'package:carpooling_beta/app/Profile/presentation/bindings/car_binding.dart';
 import 'package:carpooling_beta/app/Profile/presentation/screens/profile_view.dart';
@@ -22,6 +24,11 @@ class AppPages {
   static const String INITIAL = Routes.HOME;
 
   static final routes = [
+    GetPage(
+      name: _Paths.ONBOARDING,
+      page: () => OnboardingView(),
+      binding: OnBoardingBinding(),
+    ),
     GetPage(
       name: _Paths.LOGIN,
       page: () => const LoginView(),

@@ -1,6 +1,7 @@
 import 'package:carpooling_beta/app/Chat/presentation/controllers/chat_controller.dart';
 import 'package:carpooling_beta/app/Chat/presentation/components/messages_widget.dart';
 import 'package:carpooling_beta/app/Chat/presentation/components/new_message_widget.dart';
+import 'package:carpooling_beta/app/Home/presentation/controllers/home_controller.dart';
 import 'package:carpooling_beta/app/core/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -27,7 +28,12 @@ class ChatView extends GetWidget<ChatController> {
             Icons.arrow_back_ios,
             color: AppTheme.naturalColor1,
           ),
-          onPressed: () => Get.back(),
+          onPressed: () {
+            final homeController = Get.find<HomeController>();
+            homeController.pageId.value = 'Contacts';
+            homeController.update();
+            Get.back();
+          },
         ),
         centerTitle: true,
         elevation: 10,

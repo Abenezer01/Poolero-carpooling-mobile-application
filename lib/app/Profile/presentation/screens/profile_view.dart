@@ -1,7 +1,10 @@
 import 'package:carpooling_beta/app/Profile/domain/entities/Car.dart';
+import 'package:carpooling_beta/app/Profile/domain/entities/CarProperty.dart';
+import 'package:carpooling_beta/app/Profile/presentation/controllers/car_controller.dart';
 import 'package:carpooling_beta/app/Profile/presentation/controllers/profile_controller.dart';
 import 'package:carpooling_beta/app/Profile/presentation/components/car_card.dart';
 import 'package:carpooling_beta/app/Profile/presentation/screens/car_view.dart';
+import 'package:carpooling_beta/app/Profile/presentation/screens/edit_profile_view.dart';
 import 'package:carpooling_beta/app/core/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -83,9 +86,7 @@ class ProfileView extends GetView<ProfileController> {
                           ),
                         ),
                         child: IconButton(
-                          onPressed: () => {
-                            // Get.to(() => EditProfileView())
-                          },
+                          onPressed: () => Get.to(() => EditProfileView()),
                           icon: Icon(
                             Icons.edit_outlined,
                             color: AppTheme.primaryColor,
@@ -287,15 +288,31 @@ class ProfileView extends GetView<ProfileController> {
                           itemBuilder: (BuildContext context, int index) {
                             if (index == controller.carsList.length) {
                               return CarCard(
-                                image: 'assets/Add button.png',
-                                onTap: () => Get.toNamed(
-                                  '/car',
-                                  arguments: {
-                                    'addCar': true,
-                                    'userId': controller.userId.value,
-                                  },
-                                ),
-                              );
+                                  image: 'assets/Add button.png',
+                                  onTap: () {
+                                    Car car = Car(
+                                      id: '',
+                                      plaque: '',
+                                      category: CarProperty(id: '', name: ''),
+                                      color: CarProperty(id: '', name: ''),
+                                      model: CarProperty(id: '', name: ''),
+                                      mark: CarProperty(id: '', name: ''),
+                                      modelYear: '',
+                                      userId: controller.userId.value,
+                                    );
+
+                                    Get.toNamed(
+                                      '/car',
+                                      arguments: {
+                                        'addCar': true,
+                                        'userId': controller.userId.value,
+                                        'car': car,
+                                      },
+                                    )!
+                                        .then((value) {
+                                      Get.find<CarController>();
+                                    });
+                                  });
                             }
                             return CarCard(
                               car: controller.carsList[index],
@@ -308,7 +325,10 @@ class ProfileView extends GetView<ProfileController> {
                                     'userId': controller.userId.value,
                                     'car': controller.carsList[index],
                                   },
-                                );
+                                )!
+                                    .then((value) {
+                                  Get.find<CarController>();
+                                });
                               },
                             );
                           }),

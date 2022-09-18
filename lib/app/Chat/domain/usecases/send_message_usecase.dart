@@ -14,8 +14,7 @@ class SendMessageUseCase {
     try {
       final newMessage = await baseChatRepository.sendMessageRepo(
           fromUserId, toUserId, message);
-      print('SendMessageUseCase');
-      print(newMessage);
+          
       return newMessage;
     } on DomainError catch (e) {
       debugPrint(e.toString());

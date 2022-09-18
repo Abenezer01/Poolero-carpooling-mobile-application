@@ -12,6 +12,7 @@ import 'package:carpooling_beta/app/Chat/domain/usecases/send_message_usecase.da
 import 'package:carpooling_beta/app/Chat/domain/usecases/get_conversations_usecase.dart';
 import 'package:carpooling_beta/app/Home/data/datasource/ride_remote_datasource.dart';
 import 'package:carpooling_beta/app/Home/domain/repository/base_ride_repository.dart';
+import 'package:carpooling_beta/app/Home/domain/usecases/add_checkings_usecase.dart';
 import 'package:carpooling_beta/app/Profile/data/datasource/car_remote_datasource.dart';
 import 'package:carpooling_beta/app/Profile/data/datasource/profile_local_datasource.dart';
 import 'package:carpooling_beta/app/Profile/data/datasource/profile_remote_datasource.dart';
@@ -20,6 +21,7 @@ import 'package:carpooling_beta/app/Profile/domain/repository/base_car_repositor
 import 'package:carpooling_beta/app/Profile/data/repository/car_repository.dart';
 import 'package:carpooling_beta/app/Profile/domain/repository/base_profile_repository.dart';
 import 'package:carpooling_beta/app/Profile/domain/usecases/profile_usecase.dart';
+import 'package:carpooling_beta/app/Profile/domain/usecases/update_profile_usecase.dart';
 import 'package:carpooling_beta/app/Profile/domain/usecases/car_usecase.dart';
 import 'package:carpooling_beta/app/Home/domain/usecases/rides_usecase.dart';
 import 'package:carpooling_beta/app/Home/domain/usecases/add_ride_usecase.dart';
@@ -83,10 +85,14 @@ class ServiceLoctor {
     // Profile Usecases
     serviceLocator
         .registerLazySingleton(() => ProfileUseCase(serviceLocator()));
+    serviceLocator
+        .registerLazySingleton(() => UpdateProfileUseCase(serviceLocator()));
+
     // Car Usecases
     serviceLocator.registerLazySingleton(() => CarUseCase(serviceLocator()));
     // Ride Usecases
-    serviceLocator.registerLazySingleton(() => RidesUseCase(serviceLocator()));
+    serviceLocator
+        .registerLazySingleton(() => GetRidesUseCase(serviceLocator()));
     serviceLocator
         .registerLazySingleton(() => AddRideUseCase(serviceLocator()));
     serviceLocator
@@ -94,6 +100,8 @@ class ServiceLoctor {
     // Checking Usecases
     serviceLocator
         .registerLazySingleton(() => CheckingsUseCase(serviceLocator()));
+    serviceLocator
+        .registerLazySingleton(() => AddCheckingUseCase(serviceLocator()));
     serviceLocator
         .registerLazySingleton(() => CancelChechingUseCase(serviceLocator()));
     // Chat Usecases

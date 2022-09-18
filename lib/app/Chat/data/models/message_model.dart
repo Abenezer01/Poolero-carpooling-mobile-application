@@ -4,6 +4,7 @@ import 'package:carpooling_beta/app/core/utils.dart';
 class MessageModel extends Message {
   MessageModel({
     required super.idUser,
+    required super.toUser,
     required super.urlAvatar,
     required super.username,
     required super.message,
@@ -12,6 +13,7 @@ class MessageModel extends Message {
 
   factory MessageModel.fromJson(Map<String, dynamic> json) => MessageModel(
         idUser: json['idUser'],
+        toUser: json['toUser'],
         urlAvatar: json['urlAvatar'],
         username: json['username'],
         message: json['message'],
@@ -20,6 +22,7 @@ class MessageModel extends Message {
 
   Map<String, dynamic> toJson() => {
         'idUser': idUser,
+        'toUser': toUser,
         'urlAvatar': urlAvatar,
         'username': username,
         'message': message,

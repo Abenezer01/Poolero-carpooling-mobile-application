@@ -37,6 +37,7 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   flutter_stripe: ^5.0.0
+  carousel_slider: ^4.1.1
 
   flutter: 
     sdk: flutter
@@ -57,11 +58,11 @@ flutter:
 flutter_icons:
   android: "poolero"
   ios: true
-  image_path: "assets/logo.png"
+  image_path: "assets/appIcon.png"
 
 flutter_native_splash:
   color: "#EBE9FF"
-  image: assets/logo.png
+  image: assets/splashIcon.png
   fullscreen: true
   android: true
   ios: true

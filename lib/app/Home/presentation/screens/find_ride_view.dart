@@ -134,10 +134,13 @@ class FindRideView extends GetView<MapController> {
                     MyButton(
                       isPrimary: true,
                       isDisabled: false,
-                      textTitle: 'Request Pay',
+                      textTitle: 'Join us',
                       onPresse: () {
-                        PaymentController payController = PaymentController();
-                        payController.makePayment(amount: '5', currency: 'USD');
+                        controller.pay(
+                            int.parse(
+                                controller.requestedSeatsController.value.text),
+                            controller.ridesList[index].totalCost,
+                            controller.ridesList[index]);
 
                         // controller.CheckInRide(
                         //   rideId: controller.rides[index]['id'],

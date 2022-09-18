@@ -15,7 +15,7 @@ class AuthLocalDataSource extends BaseAuthLocalDataSource {
   @override
   Future<int> storeUser(User user) async {
     try {
-      return await baseLocalDatabaseOperations.store(user);
+    return await baseLocalDatabaseOperations.store(user);
     } catch (_) {
       throw DataError.failedToStore();
     }

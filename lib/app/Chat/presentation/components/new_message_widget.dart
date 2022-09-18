@@ -1,3 +1,4 @@
+import 'package:carpooling_beta/app/Chat/domain/entities/Message.dart';
 import 'package:carpooling_beta/app/Chat/presentation/controllers/chat_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -38,13 +39,14 @@ class NewMessageWidget extends GetView<ChatController> {
                     ),
                   ),
                   onChanged: (value) {
-                    // controller.message = Message(
-                    //     idUser: controller.user!.idUser!,
-                    //     urlAvatar: controller.user!.urlAvatar,
-                    //     username: controller.user!.name,
-                    //     message: value,
-                    //     createdAt: DateTime.now());
-                    // // controller.message!.message = value;
+                    controller.message = Message(
+                        idUser: controller.user!.id,
+                        toUser: controller.userTarget!,
+                        urlAvatar: 'image',
+                        username: controller.user!.username,
+                        message: value,
+                        createdAt: DateTime.now());
+                    controller.message!.message = value;
                     // controller.isMe.value = true;
                   },
                 ),
@@ -53,12 +55,13 @@ class NewMessageWidget extends GetView<ChatController> {
             SizedBox(width: 20),
             GestureDetector(
               onTap: () {
+                
                 controller.message == null ||
                         controller.message!.message.trim().isEmpty
                     ? null
                     : controller.sendMessage(
+                        controller.user!.id,
                         controller.userTarget!,
-                        controller.user!,
                         controller.messageTextController.value.text);
               },
               child: Container(

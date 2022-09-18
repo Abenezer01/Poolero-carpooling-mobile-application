@@ -26,13 +26,15 @@ class UserAdapter extends TypeAdapter<User> {
       ..phoneNumber = fields[6] as String
       ..driverLicense = fields[7] as String
       ..profileImg = fields[8] as String
-      ..token = fields[9] as String;
+      ..token = fields[9] as String
+      ..cars = (fields[10] as List?)?.cast<Car>()
+      ..conversations = (fields[11] as List).cast<Message>();
   }
 
   @override
   void write(BinaryWriter writer, User obj) {
     writer
-      ..writeByte(10)
+      ..writeByte(12)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -52,7 +54,11 @@ class UserAdapter extends TypeAdapter<User> {
       ..writeByte(8)
       ..write(obj.profileImg)
       ..writeByte(9)
-      ..write(obj.token);
+      ..write(obj.token)
+      ..writeByte(10)
+      ..write(obj.cars)
+      ..writeByte(11)
+      ..write(obj.conversations);
   }
 
   @override

@@ -54,7 +54,8 @@ class CarRepository extends BaseCarRepository {
     try {
       final models =
           await baseCarRemoteDataSource.getProperty(AppConstants.getModelsPath);
-
+      print('MODELS REPO');
+      print(models);
       return Right(models);
     } on DomainError catch (e) {
       print(e.message);
