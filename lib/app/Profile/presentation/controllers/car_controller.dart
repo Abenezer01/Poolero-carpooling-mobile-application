@@ -4,6 +4,7 @@ import 'package:carpooling_beta/app/Profile/domain/entities/CarProperty.dart';
 import 'package:carpooling_beta/app/Profile/domain/usecases/car_usecase.dart';
 import 'package:carpooling_beta/app/Profile/presentation/controllers/profile_controller.dart';
 import 'package:carpooling_beta/app/core/components/my_button.dart';
+import 'package:carpooling_beta/app/core/error_handling/validation_error.dart';
 import 'package:carpooling_beta/app/core/services/service_locator.dart';
 import 'package:carpooling_beta/app/core/theme.dart';
 import 'package:flutter/material.dart';
@@ -17,8 +18,8 @@ class CarController extends GetxController {
   late final RxList<CarProperty> models = List<CarProperty>.empty().obs;
   late final RxList<CarProperty> marksModels = List<CarProperty>.empty().obs;
   late String userId = '';
-
   late TextEditingController licensePlateController, modelYearController;
+  late GlobalKey<FormState> formKey;
 
   late ProfileController profileController;
   Rx<Car> car = Car(
@@ -71,17 +72,61 @@ class CarController extends GetxController {
     super.onInit();
   }
 
+  void submitForm(String action) {
+    if (formKey.currentState!.validate()) {
+      if (action == 'add') {
+        addCar(car.value);
+      }
+      updateCar(car.value);
+    }
+  }
+
+  String? licensePlateValidation(value) {
+    try {
+      if (GetUtils.isNull(value) || GetUtils.isLengthEqualTo(value, 0)) {
+        throw ValidationError.requiredField(
+            message: 'The license plate is required!');
+      }
+      return null;
+    } on ValidationError catch (e) {
+      return e.message;
+    }
+  }
+
+  String? carPropertyValidation(dynamic value, String field) {
+    try {
+      if (GetUtils.isNull(value) || GetUtils.isLengthEqualTo(value, 0)) {
+        throw ValidationError.requiredField(
+            message: 'The $field field is required!');
+      }
+      return null;
+    } on ValidationError catch (e) {
+      return e.message;
+    }
+  }
+
+  String? modelYearValidation(value) {
+    try {
+      if (GetUtils.isNull(value)) {
+        throw ValidationError.requiredField(
+            message: 'The model year is required!');
+      } else if (GetUtils.isDateTime(value)) {
+        throw ValidationError.invalidField(
+            message: 'Invalid date is required!');
+      }
+      return null;
+    } on ValidationError catch (e) {
+      return e.message;
+    }
+  }
+
   void loadModels(String markId) {
+    car.value.model.id = '';
     marksModels.value = [];
     marksModels.refresh();
-    print('ELEMENT0');
-    print(models.length);
     for (var mod in models) {
-      print('ELEMENT');
       if (mod.mark == markId) {
-        print(mod.mark! + ' // ' + markId);
         marksModels.add(mod);
-        print(marksModels);
       }
     }
     marksModels.refresh();
@@ -171,7 +216,7 @@ class CarController extends GetxController {
                 ),
                 SizedBox(height: 20),
                 Text(
-                  'Are You Confirm?',
+                  'Do you really want to delete this car?',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: AppTheme.naturalColor4,

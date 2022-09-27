@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:pandabar/model.dart';
 import 'package:pandabar/main.view.dart';
 import 'package:carpooling_beta/app/Home/presentation/controllers/payment_controller.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class MyDrawer extends GetWidget<HomeController> {
   const MyDrawer({super.key});
@@ -115,6 +116,7 @@ class MyDrawer extends GetWidget<HomeController> {
                     ListTile(
                       onTap: () async {
                         // await FlutterSecureStorage().delete(key: 'id');
+                        HomeController().dispose();
                         Get.toNamed('/login');
                       },
                       leading: Icon(Icons.logout_outlined),
@@ -162,11 +164,11 @@ class MyActions extends GetWidget<HomeController> {
                 color: AppTheme.primaryColor, size: 25),
           ),
           Text(
-            'Your next ride',
-            style: TextStyle(
-              color: AppTheme.naturalColor1,
-              fontFamily: AppTheme.primaryFont,
-              fontSize: 18,
+            'Poolero',
+            style: GoogleFonts.getFont(
+              'Pacifico',
+              fontSize: 22,
+              color: AppTheme.primaryColor,
               fontWeight: FontWeight.bold,
             ),
           ),

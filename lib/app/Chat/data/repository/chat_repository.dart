@@ -24,12 +24,10 @@ class ChatRepository extends BaseChatRepository {
   }
 
   @override
-  Future<Either<DomainError, Message>> sendMessageRepo(
-      fromUserId, toUserId, message) async {
+  Future<Either<DomainError, Message>> sendMessageRepo(Message message) async {
     try {
-      final newMessage = await baseChatRemoteDataSource.sendMessage(
-          fromUserId, toUserId, message);
-          
+      final newMessage = await baseChatRemoteDataSource.sendMessage(message);
+
       return Right(newMessage);
     } on DomainError catch (e) {
       print(e.message);
@@ -37,17 +35,16 @@ class ChatRepository extends BaseChatRepository {
     }
   }
 
-  
-  @override
-  Future<Either<DomainError, List<Message>>> chatConversationsRepo(userId) async {
-    try {
-      final conversations = await baseChatRemoteDataSource.getConversations(
-          userId);
-          
-      return Right(conversations);
-    } on DomainError catch (e) {
-      print(e.message);
-      return Left(e);
-    }
-  }
+  // @override
+  // Future<Either<DomainError, List<Message>>> chatConversationsRepo(userId) async {
+  //   try {
+  //     final conversations = await baseChatRemoteDataSource.getConversations(
+  //         userId);
+
+  //     return Right(conversations);
+  //   } on DomainError catch (e) {
+  //     print(e.message);
+  //     return Left(e);
+  //   }
+  // }
 }

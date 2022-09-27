@@ -2,6 +2,7 @@ import 'package:carpooling_beta/app/Home/presentation/components/static_widgets.
 import 'package:carpooling_beta/app/Home/presentation/controllers/map_controller.dart';
 import 'package:carpooling_beta/app/Home/presentation/controllers/payment_controller.dart';
 import 'package:carpooling_beta/app/core/components/my_button.dart';
+import 'package:carpooling_beta/app/core/constants.dart';
 import 'package:carpooling_beta/app/core/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -133,14 +134,16 @@ class FindRideView extends GetView<MapController> {
                         }),
                     MyButton(
                       isPrimary: true,
-                      isDisabled: false,
+                      isDisabled: !AppConstants.isAuth,
                       textTitle: 'Join us',
                       onPresse: () {
-                        controller.pay(
-                            int.parse(
-                                controller.requestedSeatsController.value.text),
-                            controller.ridesList[index].totalCost,
-                            controller.ridesList[index]);
+                        if (AppConstants.isAuth) {
+                          controller.pay(
+                              int.parse(controller
+                                  .requestedSeatsController.value.text),
+                              controller.ridesList[index].totalCost,
+                              controller.ridesList[index]);
+                        }
 
                         // controller.CheckInRide(
                         //   rideId: controller.rides[index]['id'],

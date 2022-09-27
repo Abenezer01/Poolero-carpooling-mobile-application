@@ -9,12 +9,10 @@ class SendMessageUseCase {
 
   SendMessageUseCase(this.baseChatRepository);
 
-  Future<Either<DomainError, Message>> call(
-      String fromUserId, String toUserId, String message) async {
+  Future<Either<DomainError, Message>> call(Message message) async {
     try {
-      final newMessage = await baseChatRepository.sendMessageRepo(
-          fromUserId, toUserId, message);
-          
+      final newMessage = await baseChatRepository.sendMessageRepo(message);
+
       return newMessage;
     } on DomainError catch (e) {
       debugPrint(e.toString());

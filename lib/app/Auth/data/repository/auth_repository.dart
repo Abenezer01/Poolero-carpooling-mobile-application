@@ -16,14 +16,14 @@ class AuthRepository extends BaseAuthRepository {
   @override
   Future<Either<DomainError, User>> loginRepo(
       String email, String password) async {
-    // try {
-    final user = await baseAuthRemoteDataSource.loginRequest(email, password);
-    await baseAuthLocalDataSource.storeUser(user);
-    await baseAuthLocalDataSource.getUser();
-    return Right(user);
-    // } on HttpError catch (e) {
-    //   return Left(e);
-    // }
+    try {
+      final user = await baseAuthRemoteDataSource.loginRequest(email, password);
+      await baseAuthLocalDataSource.storeUser(user);
+      await baseAuthLocalDataSource.getUser();
+      return Right(user);
+    } on HttpError catch (e) {
+      return Left(e);
+    }
   }
 
   @override

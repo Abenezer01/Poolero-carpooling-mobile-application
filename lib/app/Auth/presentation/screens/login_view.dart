@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:carpooling_beta/app/core/components/my_button.dart';
 import 'package:carpooling_beta/app/core/components/my_text_field.dart';
 import 'package:carpooling_beta/app/Auth/presentation/components/static_widgets.dart';
+import 'package:carpooling_beta/app/core/constants.dart';
 import 'package:carpooling_beta/app/core/error_handling/validation_error.dart';
 import 'package:carpooling_beta/app/core/theme.dart';
 import 'package:flutter/material.dart';
@@ -193,34 +194,122 @@ class LoginView extends GetView<LoginController> {
                                       SizedBox(height: 20),
                                       OrDivider(),
                                       SizedBox(height: 20),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
+                                      // Row(
+                                      //   mainAxisAlignment:
+                                      //       MainAxisAlignment.center,
+                                      //   crossAxisAlignment:
+                                      //       CrossAxisAlignment.center,
+                                      //   children: [
+                                      //     SocialMediaIcon(
+                                      //       iconPath: 'assets/Google.png',
+                                      //       onTap: () {
+                                      //         try {
+                                      //           // controller.googleSignIn.signIn();
+                                      //         } catch (e) {
+                                      //           print(e);
+                                      //         }
+                                      //       },
+                                      //     ),
+                                      //     SizedBox(width: 30),
+                                      //     SocialMediaIcon(
+                                      //       iconPath: 'assets/Facebook.png',
+                                      //       onTap: () {},
+                                      //     ),
+                                      //     SizedBox(width: 30),
+                                      //     SocialMediaIcon(
+                                      //       iconPath: 'assets/Twitter.png',
+                                      //       onTap: () {},
+                                      //     ),
+                                      //   ],
+                                      // ),
+                                      // SizedBox(height: 20),
+                                      Column(
                                         children: [
-                                          SocialMediaIcon(
-                                            iconPath: 'assets/Google.png',
-                                            onTap: () {
-                                              try {
-                                                // controller.googleSignIn.signIn();
-                                              } catch (e) {
-                                                print(e);
-                                              }
-                                            },
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            25),
+                                                    border: Border.all(
+                                                        color: AppTheme
+                                                            .primaryColor,
+                                                        width: 1.5),
+                                                  ),
+                                                  child: TextButton.icon(
+                                                    onPressed: () {
+                                                      print('googleSignIn');
+                                                      controller.googleSignIn
+                                                          .signIn();
+                                                    },
+                                                    icon: Image.asset(
+                                                      'assets/google_icon.png',
+                                                      width: 20,
+                                                      height: 20,
+                                                    ),
+                                                    label: Text(
+                                                      'Sign in with Google',
+                                                      style: TextStyle(
+                                                        color: AppTheme
+                                                            .primaryColor,
+                                                        fontFamily: AppTheme
+                                                            .primaryFont,
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                          SizedBox(width: 30),
-                                          SocialMediaIcon(
-                                            iconPath: 'assets/Facebook.png',
-                                            onTap: () {},
-                                          ),
-                                          SizedBox(width: 30),
-                                          SocialMediaIcon(
-                                            iconPath: 'assets/Twitter.png',
-                                            onTap: () {},
+                                          SizedBox(height: 20),
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            25),
+                                                    border: Border.all(
+                                                        color: AppTheme
+                                                            .primaryColor,
+                                                        width: 1.5),
+                                                  ),
+                                                  child: TextButton.icon(
+                                                    onPressed: () {
+                                                      AppConstants.isAuth =
+                                                          false;
+                                                      Get.toNamed('/map');
+                                                    },
+                                                    icon: Image.asset(
+                                                      'assets/guest.png',
+                                                      width: 20,
+                                                      height: 20,
+                                                    ),
+                                                    label: Text(
+                                                      'Continue as guest',
+                                                      style: TextStyle(
+                                                        color: AppTheme
+                                                            .primaryColor,
+                                                        fontFamily: AppTheme
+                                                            .primaryFont,
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ],
-                                      )
+                                      ),
                                     ],
                                   ),
                                 ),

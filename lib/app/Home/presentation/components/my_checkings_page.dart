@@ -1,5 +1,6 @@
-import 'package:carpooling_beta/app/Home/presentation/bindings/home_binding.dart';
+import 'package:carpooling_beta/app/Home/domain/entities/Place.dart';
 import 'package:carpooling_beta/app/Home/presentation/controllers/home_controller.dart';
+import 'package:carpooling_beta/app/Home/presentation/controllers/map_controller.dart';
 import 'package:carpooling_beta/app/core/components/my_button.dart';
 import 'package:carpooling_beta/app/core/components/trip_card.dart';
 import 'package:carpooling_beta/app/core/components/trip_infos.dart';
@@ -120,11 +121,28 @@ class MyCheckingsPage extends GetWidget<HomeController> {
                                 isDisabled: false,
                                 textTitle: 'Route',
                                 onPresse: () async {
-                                  // Get.to(() => RiderView(
-                                  //     fromPlace: controller.myCheckings[index]
-                                  //         ['ride']['fromPlace'],
-                                  //     toPlace: controller.myCheckings[index]
-                                  //         ['ride']['toPlace']));
+                                  Get.toNamed('/map', arguments: {
+                                    'route': true,
+                                    'fromPlace': Place(
+                                      city: controller.myCheckings[index].ride
+                                          .fromPlace.city,
+                                      adresse: controller.myCheckings[index]
+                                          .ride.fromPlace.adresse,
+                                      latitude: controller.myCheckings[index]
+                                          .ride.fromPlace.latitude,
+                                      longitude: controller.myCheckings[index]
+                                          .ride.fromPlace.longitude,
+                                    ),
+                                    'toPlace': Place(
+                                        city: controller.myCheckings[index].ride
+                                            .toPlace.city,
+                                        adresse: controller.myCheckings[index]
+                                            .ride.toPlace.adresse,
+                                        latitude: controller.myCheckings[index]
+                                            .ride.toPlace.latitude,
+                                        longitude: controller.myCheckings[index]
+                                            .ride.toPlace.longitude),
+                                  });
                                 }),
                             MyButton(
                                 isPrimary: false,

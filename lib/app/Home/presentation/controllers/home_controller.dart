@@ -2,15 +2,18 @@ import 'package:carpooling_beta/app/Chat/domain/entities/Message.dart';
 import 'package:carpooling_beta/app/Home/domain/entities/Checking.dart';
 import 'package:carpooling_beta/app/Home/domain/entities/Ride.dart';
 import 'package:carpooling_beta/app/Home/domain/usecases/cancel_checking_usecase.dart';
-import 'package:carpooling_beta/app/Profile/presentation/controllers/car_controller.dart';
+import 'package:carpooling_beta/app/Home/presentation/controllers/map_controller.dart';
 import 'package:carpooling_beta/app/Profile/presentation/controllers/profile_controller.dart';
 import 'package:carpooling_beta/app/core/components/my_button.dart';
+import 'package:carpooling_beta/app/core/constants.dart';
 import 'package:carpooling_beta/app/core/local_database/models/user.dart';
-import 'package:carpooling_beta/app/core/local_database/operations/user_operations.dart';
 import 'package:carpooling_beta/app/core/services/service_locator.dart';
 import 'package:carpooling_beta/app/Home/domain/usecases/rides_usecase.dart';
 import 'package:carpooling_beta/app/Home/domain/usecases/checkings_usecase.dart';
 import 'package:carpooling_beta/app/core/theme.dart';
+import 'package:carpooling_beta/app/core/utils.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:get/get.dart';
@@ -39,28 +42,47 @@ class HomeController extends GetxController
   @override
   void onInit() async {
     super.onInit();
+    AppConstants.isAuth = true;
     profile = Get.put<ProfileController>(ProfileController());
 
-    profile.getProfileInfos().then((value) async {
-      user = profile.user;
-      username.value = user!.username;
-      userId.value = user!.id;
+    if (Get.arguments != null) {
+      if (Get.arguments['googleAuth'] != null) {
+        print("USER-ID: ${profile.user!.id}");
+        setUserInfos(Get.arguments['user']);
+      } else {
+        profile.getProfileInfos().then((value) async {
+          print("USER-ID: ${profile.user!.id}");
+          setUserInfos(profile.user!);
+        });
+      }
+    }
+  }
 
-      getCheckingList();
-      getConversations();
+  setUserInfos(User user) async {
+    user = user;
+    username.value = user.username;
+    userId.value = user.id;
 
-      ridesList.clear();
-      ridesList.addAll(await getRidesList('Tangier', 'Tangier', null, 0, null));
-      myRides.clear();
-      myRides.addAll(await getRidesList(null, null, null, 0, userId.value));
+    getCheckingList();
+    getConversations(userId.value);
 
-      isLoading.value = false;
+    ridesList.clear();
+    ridesList.addAll(await getRidesList('Tangier', 'Tangier', null, 0, null));
+    myRides.clear();
+    myRides.addAll(await getRidesList(null, null, null, 0, userId.value));
+
+    FirebaseFirestore.instance.collection('users').doc(user.id).set({
+      'userId': user.id,
+      'username': user.username,
+      'urlAvatar': user.profileImg,
+      'deviceToken': await FirebaseMessaging.instance.getToken(),
     });
   }
 
   @override
   void onReady() {
     super.onReady();
+    isLoading.value = false;
   }
 
   @override
@@ -87,17 +109,35 @@ class HomeController extends GetxController
     myCheckingsList.fold((l) {
       Get.snackbar('Error occurred', l.message);
     }, (r) {
-      print(r);
       myCheckings.addAll(r);
     });
   }
 
-  void getConversations() async {
-    final conversations = user!.conversations;
-    print('Conversations:');
-    print(conversations);
+  void getConversations(String userId) async {
     myConversations.clear();
-    myConversations.addAll(conversations);
+    FirebaseFirestore.instance
+        .collection('/chats/$userId/messages')
+        .get()
+        .then((mesages) {
+      mesages.docs.map((doc) {
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(doc.get('toUser'))
+            .get()
+            .then((value) {
+          myConversations.add(Message(
+              idUser: doc.get('fromUser'),
+              toUser: doc.get('toUser'),
+              urlAvatar: value.get('urlAvatar'),
+              username: value.get('username'),
+              message: doc.get('message'),
+              createdAt: ChatUtils.toDateTime(doc.get('createdAt'))));
+          myConversations.refresh();
+        });
+      }).toList();
+    });
+
+    // myConversations.bindStream(converstions);
   }
 
   void questionDialog() => Get.defaultDialog(
@@ -167,7 +207,6 @@ class HomeController extends GetxController
     deletedChecking.fold((l) {
       Get.snackbar('Error occurred', l.message);
     }, (r) {
-      print(r);
       if (r) {
         myCheckings.removeWhere((element) => element.id == checkingId.value);
 

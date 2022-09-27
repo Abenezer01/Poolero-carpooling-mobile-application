@@ -21,7 +21,7 @@ class AppPages {
   AppPages._();
 
   // ignore: constant_identifier_names
-  static const String INITIAL = Routes.HOME;
+  static const String INITIAL = Routes.LOGIN;
 
   static final routes = [
     GetPage(

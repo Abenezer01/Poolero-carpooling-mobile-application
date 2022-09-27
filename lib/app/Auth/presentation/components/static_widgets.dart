@@ -1,4 +1,3 @@
-
 import 'package:carpooling_beta/app/core/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,7 +14,8 @@ class SocialMediaIcon extends StatelessWidget {
       onTap: onTap,
       child: Image.asset(
         iconPath,
-        scale: .7,
+        width: 20,
+        height: 20,
       ),
     );
   }

@@ -8,6 +8,7 @@ class InputIcon extends StatelessWidget {
   final TextInputType inputType;
   final bool readOnly;
   final VoidCallback? onTap;
+  final String? Function(String?)? validator;
 
   const InputIcon({
     Key? key,
@@ -17,6 +18,7 @@ class InputIcon extends StatelessWidget {
     this.inputType = TextInputType.text,
     this.readOnly = false,
     this.onTap,
+    this.validator,
   }) : super(key: key);
 
   @override
@@ -28,6 +30,7 @@ class InputIcon extends StatelessWidget {
         SizedBox(width: 10),
         Expanded(
           child: MyTextField(
+              validator: validator,
               labelText: inputText,
               textController: textController,
               inputType: inputType,

@@ -17,7 +17,7 @@ class CarCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 3),
-      margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.all(
@@ -37,7 +37,7 @@ class CarCard extends StatelessWidget {
           GestureDetector(
             onTap: onTap,
             child: Container(
-              height: 56,
+              height: 50,
               child: Image.asset(image),
             ),
           ),
@@ -48,7 +48,7 @@ class CarCard extends StatelessWidget {
                   car!.mark.name,
                   style: TextStyle(
                     color: AppTheme.naturalColor2,
-                    fontFamily: 'Nunito',
+                    fontFamily: AppTheme.primaryFont,
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
                   ),

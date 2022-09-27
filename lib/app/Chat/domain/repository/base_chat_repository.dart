@@ -5,7 +5,6 @@ import 'package:dartz/dartz.dart';
 abstract class BaseChatRepository {
   Future<Either<DomainError, Stream<List<Message>>>> getMessagesRepo(
       fromUserId, toUserId);
-  Future<Either<DomainError, Message>> sendMessageRepo(
-      String fromUserId, String toUserId, String message);
-  Future<Either<DomainError, List<Message>>> chatConversationsRepo(userId);
+  Future<Either<DomainError, Message>> sendMessageRepo(Message message);
+  // Future<Either<DomainError, List<Message>>> chatConversationsRepo(userId);
 }

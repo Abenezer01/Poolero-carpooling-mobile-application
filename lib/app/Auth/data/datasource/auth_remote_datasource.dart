@@ -26,6 +26,9 @@ class AuthRemoteDataSource extends BaseAuthRemoteDataSource {
         }),
       );
 
+      print('response');
+      print(response.statusCode);
+
       return UserModel.fromJson(
           jsonDecode(AppConstants.httpResponseHandler(response)));
     } on DioError catch (error) {

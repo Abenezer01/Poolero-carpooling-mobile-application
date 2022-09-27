@@ -7,15 +7,16 @@ import 'package:http/http.dart' as http;
 class PaymentController extends GetxController {
   Map<String, dynamic>? paymentIntentData;
 
-  Future<void> makePayment(
+  Future<bool> makePayment(
       {required String amount, required String currency}) async {
     try {
-      print('makePayment');
       paymentIntentData = await createPaymentIntent(amount, currency);
+      print('makePayment');
       print(paymentIntentData);
 
       if (paymentIntentData != null) {
-        await Stripe.instance
+        print('displayPaymentSheet-0');
+        return await Stripe.instance
             .initPaymentSheet(
                 paymentSheetParameters: SetupPaymentSheetParameters(
           // applePay: true,
@@ -28,18 +29,23 @@ class PaymentController extends GetxController {
           customerEphemeralKeySecret: paymentIntentData!['ephemeralKey'],
         ))
             .then((value) {
-          displayPaymentSheet();
+          print('displayPaymentSheet-1');
+          return displayPaymentSheet();
         });
       }
+
+      return false;
     } catch (e, s) {
       print('exception:$e$s');
+      rethrow;
     }
   }
 
-  Future<void> displayPaymentSheet() async {
+  Future<bool> displayPaymentSheet() async {
     try {
-      print('displayPaymentSheet');
+      print('displayPaymentSheet-2');
       await Stripe.instance.presentPaymentSheet();
+      print('displayPaymentSheet-3');
       Get.snackbar(
         'Payment',
         'Payment Successful',
@@ -49,14 +55,17 @@ class PaymentController extends GetxController {
         margin: const EdgeInsets.all(10),
         duration: const Duration(seconds: 2),
       );
+      return true;
     } on Exception catch (e) {
       if (e is StripeException) {
         print("Error from Stripe: ${e.error.localizedMessage}");
       } else {
         print("Unforeseen error: ${e}");
       }
+      return false;
     } catch (e) {
       print("exception:$e");
+      return false;
     }
   }
 

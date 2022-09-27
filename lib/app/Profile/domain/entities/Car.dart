@@ -31,7 +31,7 @@ class Car extends Equatable {
     this.id = id;
   }
   set setModelYear(String year) {
-    this.modelYear = year;
+    modelYear = year;
   }
 
   @override

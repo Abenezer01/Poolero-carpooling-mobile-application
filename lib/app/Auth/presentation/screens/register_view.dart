@@ -199,7 +199,7 @@ class RegisterView extends GetView<RegisterController> {
                                           MainAxisAlignment.center,
                                       children: [
                                         SocialMediaIcon(
-                                          iconPath: 'assets/Google.png',
+                                          iconPath: 'assets/google_icon.png',
                                           onTap: () {},
                                         ),
                                         SizedBox(width: 30),

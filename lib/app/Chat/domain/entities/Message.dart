@@ -5,12 +5,12 @@ class MessageField {
 }
 
 class Message {
-  final String idUser;
-  final String toUser;
-  final String urlAvatar;
-  final String username;
+   String idUser;
+   String toUser;
+   String urlAvatar;
+   String username;
   String message;
-  final DateTime createdAt;
+   DateTime createdAt;
 
   Message({
     required this.idUser,

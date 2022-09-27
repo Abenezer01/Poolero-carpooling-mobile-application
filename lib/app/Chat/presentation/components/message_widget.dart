@@ -17,7 +17,7 @@ class MessageWidget extends GetView<ChatController> {
         if (!controller.isMe.value)
           CircleAvatar(
             radius: 16,
-            backgroundImage: AssetImage('assets/Rectangle.png'),
+            backgroundImage: AssetImage('assets/Avatar.png'),
           ),
         Container(
           padding: EdgeInsets.all(16),

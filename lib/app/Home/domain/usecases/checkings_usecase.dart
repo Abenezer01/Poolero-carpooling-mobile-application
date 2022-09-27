@@ -10,7 +10,7 @@ class CheckingsUseCase {
   CheckingsUseCase(this.baseRideRepository);
 
   Future<Either<DomainError, List<Checking>>> call(String userId) async {
-    print('CheckingsUseCase');
+    // print('CheckingsUseCase');
     return await baseRideRepository.getMyCheckingsRepo(userId);
   }
 }

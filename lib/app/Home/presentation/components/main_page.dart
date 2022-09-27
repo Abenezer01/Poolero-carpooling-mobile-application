@@ -22,10 +22,11 @@ class MainPage extends GetWidget<HomeController> {
             children: [
               CarouselSlider(
                 options: CarouselOptions(
+                  clipBehavior: Clip.hardEdge,
                   height: 200.0,
                   autoPlay: true,
                   aspectRatio: 16 / 9,
-                  viewportFraction: 0.8,
+                  viewportFraction: 1,
                   enableInfiniteScroll: true,
                   autoPlayInterval: Duration(seconds: 5),
                   autoPlayAnimationDuration: Duration(milliseconds: 800),
@@ -36,6 +37,7 @@ class MainPage extends GetWidget<HomeController> {
                   return Builder(
                     builder: (BuildContext context) {
                       return Container(
+                          clipBehavior: Clip.antiAlias,
                           width: MediaQuery.of(context).size.width,
                           margin: EdgeInsets.symmetric(horizontal: 5.0),
                           decoration: BoxDecoration(
@@ -44,7 +46,7 @@ class MainPage extends GetWidget<HomeController> {
                           ),
                           child: Image.asset(
                             'assets/image1.png',
-                            fit: BoxFit.contain,
+                            fit: BoxFit.cover,
                           ));
                     },
                   );

@@ -1,14 +1,17 @@
 import 'package:http/http.dart' as http;
 import 'package:carpooling_beta/app/core/error_handling/http_error.dart';
 
-class AppConstants {
+class AppConstants{
+  static bool isAuth = false;
+
   static const String googleAPIKey = 'AIzaSyB5prNAYR4fcQ-FMDMVfOwskPAo6ZOk0II';
   static const String stripeAPIKey =
       'pk_test_51LiINJCMHlLurkUjeocsPwq1EzRMUxQtSuOOIM2KVKgIrs4j354mv4zM4ntBwGjvGiW6gf6n4BxlT0OrE2o64WUM00Yp923Hvs';
-
+  static const String cloudMessagingServrKey =
+      "AAAAk1s6hgI:APA91bGtf3aM6tog6YYnfTr4y6RBNPu2DKEJuoOSrjseFoACPItLh_CMqnyoHraS7HRthjrBEunMARfr2EeOIOyl56av7da7NMs-REDmlVDgzIBA3pBNG-FDGWif1ybcGhfh4-9W_8pM";
   static const String googleDirectionsBaseUrl =
       'https://maps.googleapis.com/maps/api/directions/json';
-  static const String baseUrl = 'https://192.168.1.39:45456/api';
+  static const String baseUrl = 'https://nextredgrape76.conveyor.cloud/api';
 
   static const Map<String, String> headers = {
     'Content-Type': 'application/json; charset=UTF-8',

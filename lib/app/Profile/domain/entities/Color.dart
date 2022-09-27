@@ -4,7 +4,7 @@ class Color extends Equatable {
   String id;
   String name;
 
-  Color({
+  Color(int i, {
     required this.id,
     required this.name,
   });

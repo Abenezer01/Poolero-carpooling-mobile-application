@@ -2,6 +2,7 @@ import 'package:carpooling_beta/app/Home/domain/entities/Passager.dart';
 import 'package:carpooling_beta/app/Home/domain/usecases/add_checkings_usecase.dart';
 import 'package:carpooling_beta/app/Home/presentation/controllers/payment_controller.dart';
 import 'package:carpooling_beta/app/Profile/presentation/controllers/profile_controller.dart';
+import 'package:carpooling_beta/app/core/error_handling/validation_error.dart';
 import 'package:carpooling_beta/app/core/local_database/models/user.dart';
 import 'package:carpooling_beta/app/Home/domain/entities/Place.dart';
 import 'package:carpooling_beta/app/Home/domain/entities/directions.dart';
@@ -11,7 +12,6 @@ import 'package:carpooling_beta/app/Home/domain/entities/Ride.dart';
 import 'package:carpooling_beta/app/Home/presentation/controllers/home_controller.dart';
 import 'package:carpooling_beta/app/Home/presentation/screens/find_ride_view.dart';
 import 'package:carpooling_beta/app/core/constants.dart';
-import 'package:carpooling_beta/app/core/local_database/operations/user_operations.dart';
 import 'package:carpooling_beta/app/core/services/service_locator.dart';
 import 'package:carpooling_beta/app/core/theme.dart';
 import 'package:carpooling_beta/app/core/utils.dart';
@@ -50,7 +50,8 @@ class MapController extends GetxController {
   RxList ridesList = [].obs;
   String? startTime, endTime;
   User? user;
-  final homeController = Get.find<HomeController>();
+  late final homeController;
+  late GlobalKey<FormState> formKey;
 
   @override
   void onInit() async {
@@ -73,8 +74,20 @@ class MapController extends GetxController {
     allowSmocking = false.obs;
     choosedCar = ''.obs;
 
-    user = homeController.profile.user;
-    carsList.value = homeController.profile.carsList;
+    print("isAuth: ${AppConstants.isAuth}");
+    if (AppConstants.isAuth) {
+      homeController = Get.find<HomeController>();
+      user = homeController.user;
+      carsList.value = homeController.profile.carsList;
+    } else {
+      switchForm.value = true;
+    }
+
+    if (Get.arguments != null) {
+      if (Get.arguments['route']) {
+        RouteRide(Get.arguments['fromPlace'], Get.arguments['toPlace']);
+      }
+    }
     isLoading.value = false;
   }
 
@@ -104,6 +117,36 @@ class MapController extends GetxController {
     isLoading.value = true;
 
     super.onClose();
+  }
+
+  void submitForm() {
+    if (formKey.currentState!.validate()) {
+      addRide();
+    }
+  }
+
+  String? textFieldValidation(value, String field) {
+    try {
+      if (GetUtils.isNull(value) || GetUtils.isLengthEqualTo(value, 0)) {
+        throw ValidationError.requiredField(
+            message: 'The $field field is required!');
+      }
+      return null;
+    } on ValidationError catch (e) {
+      return e.message;
+    }
+  }
+
+  String? pickTimeValidation(value) {
+    try {
+      if (GetUtils.isNull(value) || GetUtils.isLengthEqualTo(value, 0)) {
+        throw ValidationError.requiredField(
+            message: 'The Pick Time field is required!');
+      }
+      return null;
+    } on ValidationError catch (e) {
+      return e.message;
+    }
   }
 
   Future<void> showSearchBar(context, type) async {
@@ -351,15 +394,27 @@ class MapController extends GetxController {
     isLoading.value = false;
   }
 
-  void pay(int seats, double price, Ride ride) {
+  void pay(int seats, double price, Ride ride) async {
     int amount = (seats * price).round();
     print('AMOUNT: $amount');
     PaymentController payController = PaymentController();
-    payController
-        .makePayment(amount: amount.toString(), currency: 'MAD')
-        .then((value) {
-      CheckInRide(seats, ride);
-    });
+    try {
+      await payController
+          .makePayment(amount: amount.toString(), currency: 'MAD')
+          .then((value) {
+        if (value) CheckInRide(seats, ride);
+      });
+    } catch (e) {
+      Get.snackbar(
+        'Payment',
+        'Payment Canceled',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(10),
+        duration: const Duration(seconds: 2),
+      );
+    }
   }
 
   void CheckInRide(int requestedSeats, Ride ride) async {
@@ -421,6 +476,6 @@ class MapController extends GetxController {
       'longitude': toPlacePos.longitude,
     };
 
-    Get.toNamed('/map');
+    // Get.toNamed('/map');
   }
 }

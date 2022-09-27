@@ -2,7 +2,7 @@ import 'package:carpooling_beta/app/Profile/domain/entities/Car.dart';
 import 'package:carpooling_beta/app/Profile/domain/entities/Profile.dart';
 import 'package:carpooling_beta/app/Profile/domain/usecases/profile_usecase.dart';
 import 'package:carpooling_beta/app/Profile/domain/usecases/update_profile_usecase.dart';
-import 'package:carpooling_beta/app/Profile/presentation/controllers/car_controller.dart';
+import 'package:carpooling_beta/app/core/error_handling/validation_error.dart';
 import 'package:carpooling_beta/app/core/local_database/models/user.dart';
 import 'package:carpooling_beta/app/core/services/service_locator.dart';
 import 'package:carpooling_beta/app/core/theme.dart';
@@ -23,7 +23,7 @@ class ProfileController extends GetxController {
       usernameController,
       phoneNumberController,
       driverLicenceId;
-  // late CarController carController;
+  late GlobalKey<FormState> formKey;
 
   @override
   void onInit() async {
@@ -39,6 +39,56 @@ class ProfileController extends GetxController {
     driverLicenceId = TextEditingController();
 
     isLoading.value = false;
+  }
+
+  void submitForm() {
+    if (formKey.currentState!.validate()) {
+      updateProfileInfos(
+          userId.value,
+          firstNameController.text,
+          lastNameController.text,
+          usernameController.text,
+          emailController.text,
+          phoneNumberController.text,
+          driverLicenceId.text);
+    }
+  }
+
+  String? firstNameLastNameUsernameValidation(value) {
+    try {
+      if (GetUtils.isNull(value) || GetUtils.isLengthEqualTo(value, 0)) {
+        throw ValidationError.requiredField(message: 'Your Name is required!');
+      }
+      return null;
+    } on ValidationError catch (e) {
+      return e.message;
+    }
+  }
+
+  String? emailValidation(value) {
+    try {
+      if (GetUtils.isNull(value) || GetUtils.isLengthEqualTo(value, 0)) {
+        throw ValidationError.requiredField(message: 'Your Email is required!');
+      } else if (!GetUtils.isEmail(value!)) {
+        throw ValidationError.invalidField(message: 'Invalid Email!');
+      }
+      return null;
+    } on ValidationError catch (e) {
+      return e.message;
+    }
+  }
+
+  
+  String? phoneNumberValidation(value) {
+    try {
+      if (GetUtils.isPhoneNumber(value)) {
+        throw ValidationError.fieldsDoNotMatch(
+            message: 'Invalid Phone Number!');
+      }
+      return null;
+    } on ValidationError catch (e) {
+      return e.message;
+    }
   }
 
   Future<void> updateProfileInfos(
@@ -92,15 +142,5 @@ class ProfileController extends GetxController {
         driverLicenceId.text = user!.driverLicense;
       });
     });
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
   }
 }

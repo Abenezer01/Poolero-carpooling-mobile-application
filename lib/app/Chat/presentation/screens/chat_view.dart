@@ -31,6 +31,7 @@ class ChatView extends GetWidget<ChatController> {
           onPressed: () {
             final homeController = Get.find<HomeController>();
             homeController.pageId.value = 'Contacts';
+            homeController.getConversations(controller.user!.id);
             homeController.update();
             Get.back();
           },

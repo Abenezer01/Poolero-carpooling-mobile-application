@@ -41,8 +41,8 @@ class NewMessageWidget extends GetView<ChatController> {
                   onChanged: (value) {
                     controller.message = Message(
                         idUser: controller.user!.id,
-                        toUser: controller.userTarget!,
-                        urlAvatar: 'image',
+                        toUser: controller.userTarget!.id,
+                        urlAvatar: controller.userTarget!.profileImg,
                         username: controller.user!.username,
                         message: value,
                         createdAt: DateTime.now());
@@ -55,13 +55,12 @@ class NewMessageWidget extends GetView<ChatController> {
             SizedBox(width: 20),
             GestureDetector(
               onTap: () {
-                
                 controller.message == null ||
                         controller.message!.message.trim().isEmpty
                     ? null
                     : controller.sendMessage(
                         controller.user!.id,
-                        controller.userTarget!,
+                        controller.userTarget!.id,
                         controller.messageTextController.value.text);
               },
               child: Container(

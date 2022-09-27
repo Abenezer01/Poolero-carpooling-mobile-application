@@ -2,13 +2,12 @@ import 'package:carpooling_beta/app/Chat/data/models/message_model.dart';
 import 'package:carpooling_beta/app/Chat/domain/entities/Message.dart';
 import 'package:carpooling_beta/app/Chat/domain/usecases/get_messages_usecase.dart';
 import 'package:carpooling_beta/app/Chat/domain/usecases/send_message_usecase.dart';
-import 'package:carpooling_beta/app/Chat/domain/usecases/get_conversations_usecase.dart';
 import 'package:carpooling_beta/app/Home/presentation/controllers/home_controller.dart';
-import 'package:carpooling_beta/app/Profile/presentation/controllers/profile_controller.dart';
 import 'package:carpooling_beta/app/core/local_database/models/user.dart';
 import 'package:carpooling_beta/app/core/local_database/operations/user_operations.dart';
 import 'package:carpooling_beta/app/core/services/service_locator.dart';
 import 'package:carpooling_beta/app/core/theme.dart';
+import 'package:carpooling_beta/app/core/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -21,7 +20,7 @@ class ChatController extends GetxController {
   // RxList conversationsList = [].obs;
   Message? message;
   User? user;
-  String? userTarget;
+  User? userTarget;
   RxBool isMe = true.obs;
   final messageTextController = TextEditingController();
   final listViewController = ScrollController();
@@ -32,10 +31,9 @@ class ChatController extends GetxController {
     super.onInit();
 
     user = await UserLocalDataBaseOperations().get();
-    userTarget = Get.arguments['userTarget'];
+    userTarget = await getUserInfos(Get.arguments['userTarget']);
 
-    getMessages(user!.id, userTarget!);
-    getConversations(user!.id);
+    getMessages(user!.id, userTarget!.id);
 
     isLoading.value = false;
   }
@@ -48,26 +46,6 @@ class ChatController extends GetxController {
   @override
   void onClose() {
     super.onClose();
-  }
-
-  void getConversations(String userId) async {
-    final conversations =
-        await GetConversationsUseCase(serviceLocator())(userId);
-
-    conversations.fold((l) {
-      Get.snackbar(
-        'Chat Error',
-        l.message,
-        backgroundColor: AppTheme.accentColor,
-        colorText: AppTheme.naturalColor5,
-      );
-    }, (r) {
-      print('CHATCONTROLLER:');
-      homeController.myConversations.clear();
-      homeController.myConversations.addAll(r);
-      homeController.myConversations.refresh();
-      print(homeController.myConversations);
-    });
   }
 
   void getMessages(String fromUser, String toUser) async {
@@ -88,10 +66,17 @@ class ChatController extends GetxController {
     });
   }
 
-  void sendMessage(String fromUser, String toUser, String message) async {
-    print('sendMessage-controller: $fromUser - $fromUser');
+  void sendMessage(String fromUser, String toUser, String messageText) async {
+    final newMessageObj = Message(
+      idUser: fromUser,
+      toUser: toUser,
+      message: messageText,
+      urlAvatar: userTarget!.profileImg,
+      username: userTarget!.username,
+      createdAt: ChatUtils.fromDateTimeToJson(DateTime.now()),
+    );
     final newMessage =
-        await SendMessageUseCase(serviceLocator())(fromUser, toUser, message);
+        await SendMessageUseCase(serviceLocator())(newMessageObj);
 
     newMessage.fold((l) {
       print(l.message);
@@ -99,8 +84,8 @@ class ChatController extends GetxController {
       final message = MessageModel(
         idUser: r.idUser,
         toUser: r.toUser,
-        urlAvatar: r.urlAvatar,
-        username: r.username,
+        urlAvatar: userTarget!.profileImg,
+        username: userTarget!.username,
         message: r.message,
         createdAt: r.createdAt,
       );
@@ -108,19 +93,19 @@ class ChatController extends GetxController {
       messages.refresh();
       messageTextController.clear();
       animateListView();
-      // getConversations();
+    });
+  }
 
-      homeController.myConversations.clear();
-      homeController.myConversations.addAll(user!.conversations);
-      homeController.myConversations.map((element) {
-        if (element.toUser == toUser) {
-          element = r;
-        } else {
-          homeController.myConversations.add(r);
-        }
-        homeController.myConversations.refresh();
-        return;
-      });
+  Future<User> getUserInfos(String id) async {
+    return await FirebaseFirestore.instance
+        .collection('users')
+        .doc(id)
+        .get()
+        .then((value) {
+      return User()
+        ..id = value.get('userId')
+        ..username = value.get('username')
+        ..profileImg = value.get('urlAvatar');
     });
   }
 

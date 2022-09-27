@@ -28,17 +28,18 @@ class OnboardingController extends GetxController {
 
   @override
   void onInit() async {
-    final user = await UserLocalDataBaseOperations().get();
-    if (user == null) {
-      print('USER ID:');
-      print(user!.id.toString());
-      Get.toNamed('/home');
-      isLoading.value = false;
-    } else {
-      // print('USER ID NOT FOUND');
-      // Get.toNamed('/login');
-      isLoading.value = false;
-    }
+    // final user = await UserLocalDataBaseOperations().get();
+    // if (user == null) {
+    //   print('USER ID:');
+    //   print(user!.id.toString());
+    //   Get.toNamed('/home');
+    //   isLoading.value = false;
+    // } else {
+    //   // print('USER ID NOT FOUND');
+    //   // Get.toNamed('/login');
+    //   isLoading.value = false;
+    // }
+    isLoading.value = false;
 
     super.onInit();
   }

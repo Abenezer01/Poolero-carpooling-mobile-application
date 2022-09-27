@@ -12,7 +12,7 @@ class GetRidesUseCase {
   GetRidesUseCase(this.baseRideRepository);
 
   Future<Either<DomainError, List<Ride>>> call(String? fromPlace,String? toPlace,String? date,int requestedSeats,String? driverId) async {
-    print('RidesUseCase');
+    // print('RidesUseCase');
     return await baseRideRepository.geRidesRepo(fromPlace,toPlace,date,requestedSeats,driverId);
   }
 

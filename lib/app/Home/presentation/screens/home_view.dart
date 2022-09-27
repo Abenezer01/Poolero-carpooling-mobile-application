@@ -4,6 +4,7 @@ import 'package:carpooling_beta/app/Home/presentation/controllers/home_controlle
 import 'package:carpooling_beta/app/Home/presentation/components/main_page.dart';
 import 'package:carpooling_beta/app/Home/presentation/components/my_rides_page.dart';
 import 'package:carpooling_beta/app/Home/presentation/components/my_checkings_page.dart';
+import 'package:carpooling_beta/app/core/local_database/models/user.dart';
 import 'package:carpooling_beta/app/core/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
@@ -72,39 +73,111 @@ class HomeView extends GetView<HomeController> {
               return Container(
                 margin: EdgeInsets.only(bottom: 50),
                 child: SafeArea(
-                  bottom: false,
-                  child: controller.myConversations.isEmpty
-                      ? Center(
-                          child: TextButton(
-                              onPressed: () {
-                                Get.toNamed('/chat', arguments: {
-                                  'userTarget':
-                                      'cc4b6ecc-0523-49a7-a4de-18c8cff17541',
-                                });
-                              },
-                              child: Text('You have no conversations yet..')),
-                        )
-                      : ListView.builder(
-                          // physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 10),
-                          itemCount: controller.myConversations.length,
-                          itemBuilder: (BuildContext buildContext, index) {
-                            print('CONVERSATION:');
-                            Message conversation =
-                                controller.myConversations[index];
-                            return GestureDetector(
+                    bottom: false,
+                    child: Obx(
+                      () => controller.myConversations.isEmpty
+                          ? Center(
+                              child: GestureDetector(
                                 onTap: () {
                                   Get.toNamed('/chat', arguments: {
                                     'userTarget':
-                                        'cc4b6ecc-0523-49a7-a4de-18c8cff17541',
+                                        "cc4b6ecc-0523-49a7-a4de-18c8cff17541",
                                   });
                                 },
                                 child: Text(
-                                    'myConversations with ${conversation.username}'));
-                          }),
-                ),
+                                  'You have no conversations yet..',
+                                  style: TextStyle(
+                                    color: AppTheme.naturalColor1,
+                                    fontFamily: AppTheme.primaryFont,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                            )
+                          : ListView.builder(
+                              // physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 10),
+                              itemCount: controller.myConversations.length,
+                              itemBuilder: (BuildContext buildContext, index) {
+                                Message conversation =
+                                    controller.myConversations[index];
+                                return GestureDetector(
+                                  onTap: () {
+                                    String userTarget;
+                                    if (controller.userId.value !=
+                                        conversation.idUser) {
+                                      userTarget = conversation.idUser;
+                                    } else {
+                                      userTarget = conversation.toUser;
+                                    }
+                                    Get.toNamed('/chat', arguments: {
+                                      'userTarget': userTarget,
+                                    });
+                                  },
+                                  child: Container(
+                                    margin: EdgeInsets.only(bottom: 20.0),
+                                    width: Get.width * .9,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(24)),
+                                      boxShadow: [
+                                        AppTheme.roundItemShadowColor
+                                      ],
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 10),
+                                      child: Row(
+                                        children: [
+                                          Image.asset(
+                                            conversation.urlAvatar,
+                                            width: 60,
+                                            height: 60,
+                                          ),
+                                          SizedBox(width: 15),
+                                          Expanded(
+                                              child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                conversation.username,
+                                                style: TextStyle(
+                                                  color: AppTheme.naturalColor1,
+                                                  fontFamily:
+                                                      AppTheme.primaryFont,
+                                                  fontSize: 15,
+                                                ),
+                                              ),
+                                              SizedBox(height: 8),
+                                              Text(
+                                                'message: ${conversation.message}',
+                                                style: TextStyle(
+                                                  color: AppTheme.naturalColor3,
+                                                  fontFamily:
+                                                      AppTheme.primaryFont,
+                                                  fontSize: 10,
+                                                ),
+                                              ),
+                                            ],
+                                          )),
+                                          Container(
+                                            padding: EdgeInsets.only(right: 5),
+                                            child: Icon(
+                                              Icons.send_rounded,
+                                              color: AppTheme.primaryColor,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }),
+                    )),
               );
             default:
               return Container();

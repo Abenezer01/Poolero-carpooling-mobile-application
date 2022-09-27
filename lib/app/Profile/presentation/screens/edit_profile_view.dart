@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 class EditProfileView extends GetView<ProfileController> {
   @override
   Widget build(BuildContext context) {
+    controller.formKey = GlobalKey<FormState>();
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -36,156 +37,167 @@ class EditProfileView extends GetView<ProfileController> {
           child: Obx(
             () => controller.isLoading.value
                 ? Center(child: CircularProgressIndicator())
-                : Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            child: Column(
-                              children: [
-                                Image.asset('assets/Rectangle.png',
-                                    fit: BoxFit.cover, width: 120),
-                                SizedBox(height: 20),
-                                Text(
-                                  'Change Pictures',
-                                  style: TextStyle(
-                                    color: AppTheme.primaryColor,
-                                    fontFamily: AppTheme.primaryFont,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
+                : Form(
+                    key: controller.formKey,
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              child: Column(
+                                children: [
+                                  Image.asset('assets/Rectangle.png',
+                                      fit: BoxFit.cover, width: 120),
+                                  SizedBox(height: 20),
+                                  Text(
+                                    'Change Pictures',
+                                    style: TextStyle(
+                                      color: AppTheme.primaryColor,
+                                      fontFamily: AppTheme.primaryFont,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 30),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                child: MyTextField(
+                                  textController:
+                                      controller.firstNameController,
+                                  labelText: 'First Name',
+                                  validator: (value) => controller
+                                      .firstNameLastNameUsernameValidation(
+                                          value),
                                 ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 30),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Container(
-                              child: MyTextField(
-                                textController: controller.firstNameController,
-                                labelText: 'First Name',
                               ),
                             ),
-                          ),
-                          SizedBox(width: 20),
-                          Expanded(
-                            child: Container(
-                              child: MyTextField(
+                            SizedBox(width: 20),
+                            Expanded(
+                              child: Container(
+                                child: MyTextField(
                                   textController: controller.lastNameController,
-                                  labelText: 'Last Name'),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 20),
-                      MyTextField(
-                        textController: controller.usernameController,
-                        labelText: 'Username',
-                      ),
-                      SizedBox(height: 20),
-                      MyTextField(
-                        textController: controller.emailController,
-                        labelText: 'Email',
-                      ),
-                      SizedBox(height: 20),
-                      MyTextField(
-                        textController: controller.phoneNumberController,
-                        labelText: 'Phone Number',
-                      ),
-                      SizedBox(height: 30),
-                      Container(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(8.0),
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(.09),
-                              offset: Offset(0, 4),
-                              blurRadius: 16,
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              child: Text('Verified Profile'),
-                            ),
-                            Container(
-                              child: Icon(Icons.check,
-                                  color: AppTheme.primaryColor),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      Container(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(8.0),
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(.09),
-                              offset: Offset(0, 4),
-                              blurRadius: 16,
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              child: Text('Driver License'),
-                            ),
-                            Container(
-                              child: controller.driverLicenceId.text != ''
-                                  ? Icon(Icons.check,
-                                      color: AppTheme.primaryColor)
-                                  : Icon(Icons.close_rounded,
-                                      color: AppTheme.accentColor),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 50),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Container(
-                              child: MyButton(
-                                isPrimary: true,
-                                isDisabled: false,
-                                textTitle: 'Update Profile',
-                                onPresse: () {
-                                  controller.updateProfileInfos(
-                                      controller.userId.value,
-                                      controller.firstNameController.text,
-                                      controller.lastNameController.text,
-                                      controller.usernameController.text,
-                                      controller.emailController.text,
-                                      controller.phoneNumberController.text,
-                                      controller.driverLicenceId.text);
-                                },
+                                  labelText: 'Last Name',
+                                  validator: (value) => controller
+                                      .firstNameLastNameUsernameValidation(
+                                          value),
+                                ),
                               ),
                             ),
+                          ],
+                        ),
+                        SizedBox(height: 20),
+                        MyTextField(
+                          textController: controller.usernameController,
+                          labelText: 'Username',
+                          validator: (value) => controller
+                              .firstNameLastNameUsernameValidation(value),
+                        ),
+                        SizedBox(height: 20),
+                        MyTextField(
+                          textController: controller.emailController,
+                          labelText: 'Email',
+                          validator: (value) =>
+                              controller.emailValidation(value!),
+                        ),
+                        SizedBox(height: 20),
+                        MyTextField(
+                          inputType: TextInputType.phone,
+                          textController: controller.phoneNumberController,
+                          labelText: 'Phone Number',
+                          validator: (value) =>
+                              controller.phoneNumberValidation(value!),
+                        ),
+                        SizedBox(height: 30),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 15),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(8.0),
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(.09),
+                                offset: Offset(0, 4),
+                                blurRadius: 16,
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      SizedBox(height: 30),
-                    ],
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                child: Text('Verified Profile'),
+                              ),
+                              Container(
+                                child: Icon(Icons.check,
+                                    color: AppTheme.primaryColor),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 15),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(8.0),
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(.09),
+                                offset: Offset(0, 4),
+                                blurRadius: 16,
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                child: Text('Driver License'),
+                              ),
+                              Container(
+                                child: controller.driverLicenceId.text != ''
+                                    ? Icon(Icons.check,
+                                        color: AppTheme.primaryColor)
+                                    : Icon(Icons.close_rounded,
+                                        color: AppTheme.accentColor),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 50),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                child: MyButton(
+                                  isPrimary: true,
+                                  isDisabled: false,
+                                  textTitle: 'Update Profile',
+                                  onPresse: () {
+                                    controller.submitForm();
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 30),
+                      ],
+                    ),
                   ),
           ),
         ),

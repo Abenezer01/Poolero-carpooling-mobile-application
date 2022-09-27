@@ -1,6 +1,5 @@
 import 'package:carpooling_beta/app/Chat/domain/entities/Message.dart';
 import 'package:carpooling_beta/app/core/error_handling/http_error.dart';
-import 'package:carpooling_beta/app/core/local_database/operations/user_operations.dart';
 import 'package:carpooling_beta/app/core/utils.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -10,9 +9,7 @@ import 'package:rxdart/rxdart.dart';
 
 abstract class BaseChatRemoteDataSource {
   Stream<List<MessageModel>> getMessages(String fromUserId, String toUserId);
-  Future<Message> sendMessage(
-      String fromUserId, String toUserId, String message);
-  Future<List<Message>> getConversations(String userId);
+  Future<Message> sendMessage(Message message);
 }
 
 class ChatRemoteDataSource extends BaseChatRemoteDataSource {
@@ -47,52 +44,41 @@ class ChatRemoteDataSource extends BaseChatRemoteDataSource {
   }
 
   @override
-  Future<Message> sendMessage(
-      String fromUserId, String toUserId, String message) async {
+  Future<Message> sendMessage(Message newMessage) async {
     try {
-      final refMessages = await FirebaseFirestore.instance
-          .collection('chats/$fromUserId/messages/$toUserId/message');
-      final newMessage = Message(
-        idUser: fromUserId,
-        toUser: toUserId,
-        urlAvatar: 'myUrlAvatar',
-        username: 'myUsername',
-        message: message,
-        createdAt: DateTime.now(),
-      );
+      FirebaseFirestore.instance
+          .collection('chats/${newMessage.idUser}/messages')
+          .doc(newMessage.toUser)
+          .set({
+        'fromUser': newMessage.idUser,
+        'toUser': newMessage.toUser,
+        'message': newMessage.message,
+        'createdAt': newMessage.createdAt,
+      }).then((value) {
+        FirebaseFirestore.instance
+            .collection('chats/${newMessage.toUser}/messages')
+            .doc(newMessage.idUser)
+            .set({
+          'fromUser': newMessage.idUser,
+          'toUser': newMessage.toUser,
+          'message': newMessage.message,
+          'createdAt': newMessage.createdAt,
+        });
+      });
+      FirebaseFirestore.instance
+          .collection(
+              'chats/${newMessage.idUser}/messages/${newMessage.toUser}/message')
+          .add(newMessage.toJson());
 
-      refMessages.add(newMessage.toJson());
+      // refMessages.add(newMessage.toJson());
 
-      final localDb = await UserLocalDataBaseOperations();
-
-      final conversations = localDb.updateConversations(newMessage);
-      print('TESTING CONVERSATION 1:');
-      print(newMessage.toString());
-      print(conversations.toString());
+      // final localDb = await UserLocalDataBaseOperations();
+      // final conversations = localDb.updateConversations(newMessage);
+      // print('TESTING CONVERSATION 1:');
+      // print(newMessage.toString());
+      // print(conversations.toString());
 
       return newMessage;
-    } on DioError catch (error) {
-      debugPrint(error.toString());
-      if (error.type == DioErrorType.connectTimeout) {
-        throw HttpError.timeOut();
-      } else {
-        throw HttpError.serverError();
-      }
-    } on HttpError catch (error) {
-      debugPrint(error.toString());
-      rethrow;
-    }
-  }
-
-  @override
-  Future<List<Message>> getConversations(String userId) async {
-    try {
-      List<Message> conversations = [];
-
-      final user = await UserLocalDataBaseOperations().get();
-      conversations.addAll(user!.conversations);
-
-      return conversations;
     } on DioError catch (error) {
       debugPrint(error.toString());
       if (error.type == DioErrorType.connectTimeout) {

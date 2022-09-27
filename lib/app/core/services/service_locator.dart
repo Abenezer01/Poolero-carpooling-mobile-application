@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:carpooling_beta/app/Auth/data/datasource/auth_local_datasource.dart';
 import 'package:carpooling_beta/app/Auth/data/datasource/auth_remote_datasource.dart';
 import 'package:carpooling_beta/app/Auth/data/repository/auth_repository.dart';
@@ -9,10 +11,10 @@ import 'package:carpooling_beta/app/Chat/data/repository/chat_repository.dart';
 import 'package:carpooling_beta/app/Chat/domain/repository/base_chat_repository.dart';
 import 'package:carpooling_beta/app/Chat/domain/usecases/get_messages_usecase.dart';
 import 'package:carpooling_beta/app/Chat/domain/usecases/send_message_usecase.dart';
-import 'package:carpooling_beta/app/Chat/domain/usecases/get_conversations_usecase.dart';
 import 'package:carpooling_beta/app/Home/data/datasource/ride_remote_datasource.dart';
 import 'package:carpooling_beta/app/Home/domain/repository/base_ride_repository.dart';
 import 'package:carpooling_beta/app/Home/domain/usecases/add_checkings_usecase.dart';
+import 'package:carpooling_beta/app/Home/presentation/controllers/home_controller.dart';
 import 'package:carpooling_beta/app/Profile/data/datasource/car_remote_datasource.dart';
 import 'package:carpooling_beta/app/Profile/data/datasource/profile_local_datasource.dart';
 import 'package:carpooling_beta/app/Profile/data/datasource/profile_remote_datasource.dart';
@@ -29,6 +31,7 @@ import 'package:carpooling_beta/app/Home/domain/usecases/find_ride_usecase.dart'
 import 'package:carpooling_beta/app/Home/domain/usecases/checkings_usecase.dart';
 import 'package:carpooling_beta/app/Home/domain/usecases/cancel_checking_usecase.dart';
 import 'package:carpooling_beta/app/Home/data/repository/ride_repository.dart';
+import 'package:carpooling_beta/app/Profile/presentation/controllers/profile_controller.dart';
 import 'package:carpooling_beta/app/core/local_database/operations/user_operations.dart';
 import 'package:get_it/get_it.dart';
 
@@ -36,6 +39,7 @@ final serviceLocator = GetIt.instance;
 
 class ServiceLoctor {
   void init() {
+
     /// DATASOURCES
     // Local DataSource
     serviceLocator.registerLazySingleton<BaseLocalDatabaseOperations>(
@@ -109,7 +113,5 @@ class ServiceLoctor {
         .registerLazySingleton(() => GetMessagesUseCase(serviceLocator()));
     serviceLocator
         .registerLazySingleton(() => SendMessageUseCase(serviceLocator()));
-    serviceLocator
-        .registerLazySingleton(() => GetConversationsUseCase(serviceLocator()));
   }
 }

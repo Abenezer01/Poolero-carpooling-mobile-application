@@ -15,7 +15,7 @@ class RideRepository extends BaseRideRepository {
   @override
   Future<Either<DomainError, List<Ride>>> geRidesRepo(String? fromPlace,String? toPlace,String? date,int requestedSeats,String? driverId) async {
     try {
-      print('RideRepository');
+      // print('RideRepository');
       final myRides = await baseRideRemoteDataSource.getMyRides(fromPlace,toPlace,date,requestedSeats,driverId);
 
       return Right(myRides);
@@ -29,7 +29,7 @@ class RideRepository extends BaseRideRepository {
   Future<Either<DomainError, List<Checking>>> getMyCheckingsRepo(
       String userId) async {
     try {
-      print('getMyCheckingsRepo');
+      // print('getMyCheckingsRepo');
       final myCheckings = await baseRideRemoteDataSource.getMyChecking(userId);
       final checkings = List<Checking>.from(myCheckings.map((e) => Checking(
             id: e.id,
@@ -53,7 +53,7 @@ class RideRepository extends BaseRideRepository {
   @override
   Future<Either<DomainError, Ride>> addRideRepo(Ride ride) async {
     try {
-      print('RideRepository');
+      // print('RideRepository');
       final newRide = await baseRideRemoteDataSource.addRide(ride);
 
       return Right(newRide);
@@ -66,7 +66,7 @@ class RideRepository extends BaseRideRepository {
   @override
   Future<Either<DomainError, bool>> cancelCheckingRepo(String rideId) async {
     try {
-      print('RideRepository');
+      // print('RideRepository');
       final deleted = await baseRideRemoteDataSource.cancelChecking(rideId);
 
       return Right(deleted);
@@ -84,7 +84,7 @@ class RideRepository extends BaseRideRepository {
       int? requestedSeats,
       String? driverId) async {
     try {
-      print('RideRepository');
+      // print('RideRepository');
       final ridesList = await baseRideRemoteDataSource.findRides(
           fromPlace, toPlace, departureDate, requestedSeats, driverId);
 

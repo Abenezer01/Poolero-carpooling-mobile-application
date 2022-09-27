@@ -18,8 +18,8 @@ class CheckingModel extends Checking {
       if (!json.containsKey('id')) {
         throw DataError.missingParameters();
       }
-      print('CheckingModel:');
-      print(json);
+      // print('CheckingModel:');
+      // print(json);
       final passager = PassagerModel.fromJson(json['passager']);
       return CheckingModel(
         id: json['id'],
