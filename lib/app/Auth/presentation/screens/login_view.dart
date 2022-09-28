@@ -18,12 +18,12 @@ class LoginView extends GetView<LoginController> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Container(
-            width: double.infinity,
-            height: Get.height + Get.statusBarHeight,
-            child: Obx(
-              () => Container(
+        child: Obx(
+          () => SingleChildScrollView(
+            child: Container(
+              width: double.infinity,
+              height: Get.height + Get.statusBarHeight,
+              child: Container(
                 child: controller.isLoading.value
                     ? CircularProgressIndicator(color: AppTheme.primaryColor)
                     : Padding(

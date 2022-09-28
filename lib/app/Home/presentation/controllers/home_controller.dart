@@ -49,19 +49,20 @@ class HomeController extends GetxController
       if (Get.arguments['googleAuth'] != null) {
         print("USER-ID: ${profile.user!.id}");
         setUserInfos(Get.arguments['user']);
-      } else {
-        profile.getProfileInfos().then((value) async {
-          print("USER-ID: ${profile.user!.id}");
-          setUserInfos(profile.user!);
-        });
+        return;
       }
     }
+    profile.getProfileInfos().then((value) async {
+      print("USER-ID: ${profile.user!.id}");
+      setUserInfos(profile.user!);
+    });
   }
 
-  setUserInfos(User user) async {
-    user = user;
-    username.value = user.username;
-    userId.value = user.id;
+  setUserInfos(User userObj) async {
+    print('SETTING USER INFO');
+    user = userObj;
+    username.value = user!.username;
+    userId.value = user!.id;
 
     getCheckingList();
     getConversations(userId.value);
@@ -71,10 +72,10 @@ class HomeController extends GetxController
     myRides.clear();
     myRides.addAll(await getRidesList(null, null, null, 0, userId.value));
 
-    FirebaseFirestore.instance.collection('users').doc(user.id).set({
-      'userId': user.id,
-      'username': user.username,
-      'urlAvatar': user.profileImg,
+    FirebaseFirestore.instance.collection('users').doc(user!.id).set({
+      'userId': user!.id,
+      'username': user!.username,
+      'urlAvatar': user!.profileImg,
       'deviceToken': await FirebaseMessaging.instance.getToken(),
     });
   }

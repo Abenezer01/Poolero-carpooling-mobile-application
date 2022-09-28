@@ -209,7 +209,7 @@ class CarController extends GetxController {
                   'Question',
                   style: TextStyle(
                     color: AppTheme.naturalColor1,
-                    fontFamily: 'Nunito',
+                    fontFamily: AppTheme.primaryFont,
                     fontSize: 18,
                     fontWeight: FontWeight.w900,
                   ),
@@ -220,7 +220,7 @@ class CarController extends GetxController {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: AppTheme.naturalColor4,
-                    fontFamily: 'Nunito',
+                    fontFamily: AppTheme.primaryFont,
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),

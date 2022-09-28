@@ -1,12 +1,13 @@
 import 'package:carpooling_beta/app/Home/domain/entities/Place.dart';
+import 'package:carpooling_beta/app/Home/domain/entities/Ride.dart';
 import 'package:carpooling_beta/app/Home/presentation/controllers/home_controller.dart';
-import 'package:carpooling_beta/app/Home/presentation/controllers/map_controller.dart';
 import 'package:carpooling_beta/app/core/components/my_button.dart';
 import 'package:carpooling_beta/app/core/components/trip_card.dart';
 import 'package:carpooling_beta/app/core/components/trip_infos.dart';
 import 'package:carpooling_beta/app/core/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class MyCheckingsPage extends GetWidget<HomeController> {
   const MyCheckingsPage({Key? key}) : super(key: key);
@@ -29,9 +30,12 @@ class MyCheckingsPage extends GetWidget<HomeController> {
                           horizontal: 15, vertical: 10),
                       itemCount: controller.myCheckings.length,
                       itemBuilder: (BuildContext context, int index) {
+                        Ride ride = controller.myCheckings[index].ride;
+                        DateTime time = DateFormat("yyyy-MM-ddTHH:mm:ssZ")
+                            .parse(ride.departureDate);
                         return TripCard(
                           avatarImg: 'assets/Avatar.png',
-                          fullName: 'Bernard Alvarado',
+                          fullName: ride.driver.username,
                           description: '',
                           body: Column(
                             children: [
@@ -47,8 +51,7 @@ class MyCheckingsPage extends GetWidget<HomeController> {
                                   ),
                                   Expanded(
                                     child: Text(
-                                      controller.myCheckings[index].ride
-                                          .fromPlace.adresse,
+                                      ride.fromPlace.adresse,
                                       style: TextStyle(
                                         fontFamily: AppTheme.primaryFont,
                                         fontSize: 18,
@@ -87,8 +90,7 @@ class MyCheckingsPage extends GetWidget<HomeController> {
                                   ),
                                   Expanded(
                                     child: Text(
-                                      controller.myCheckings[index].ride.toPlace
-                                          .adresse,
+                                      ride.toPlace.adresse,
                                       style: TextStyle(
                                         fontFamily: AppTheme.primaryFont,
                                         fontSize: 18,
@@ -104,16 +106,16 @@ class MyCheckingsPage extends GetWidget<HomeController> {
                           tripInfos: [
                             TripInfo(
                                 icon: 'assets/Clock.png',
-                                info: '16:30',
+                                info: '${time.hour}:${time.minute}',
                                 label: 'Time'),
                             TripInfo(
-                                icon: 'assets/Chat.png',
-                                info: '94%',
-                                label: 'Ontime'),
+                                icon: 'assets/send.png',
+                                info: ride.totalDistance.round().toString(),
+                                label: 'KM'),
                             TripInfo(
                                 icon: 'assets/Money.png',
-                                info: '56',
-                                label: 'Points'),
+                                info: ride.totalCost.round().toString(),
+                                label: 'Dirhams'),
                           ],
                           buttons: [
                             MyButton(
@@ -123,25 +125,7 @@ class MyCheckingsPage extends GetWidget<HomeController> {
                                 onPresse: () async {
                                   Get.toNamed('/map', arguments: {
                                     'route': true,
-                                    'fromPlace': Place(
-                                      city: controller.myCheckings[index].ride
-                                          .fromPlace.city,
-                                      adresse: controller.myCheckings[index]
-                                          .ride.fromPlace.adresse,
-                                      latitude: controller.myCheckings[index]
-                                          .ride.fromPlace.latitude,
-                                      longitude: controller.myCheckings[index]
-                                          .ride.fromPlace.longitude,
-                                    ),
-                                    'toPlace': Place(
-                                        city: controller.myCheckings[index].ride
-                                            .toPlace.city,
-                                        adresse: controller.myCheckings[index]
-                                            .ride.toPlace.adresse,
-                                        latitude: controller.myCheckings[index]
-                                            .ride.toPlace.latitude,
-                                        longitude: controller.myCheckings[index]
-                                            .ride.toPlace.longitude),
+                                      'ride': ride,
                                   });
                                 }),
                             MyButton(
@@ -158,8 +142,21 @@ class MyCheckingsPage extends GetWidget<HomeController> {
                         );
                       })
                   : Center(
-                      child: Center(child: Text('No Checkings.')),
-                    ),
+                      child: Column(
+                      children: [
+                        SizedBox(height: Get.height / 3),
+                        Text('No Checkings to show.'),
+                        SizedBox(height: 20),
+                        MyButton(
+                          isPrimary: true,
+                          isDisabled: false,
+                          textTitle: '  Check-in Now  ',
+                          onPresse: () {
+                            Get.toNamed('map');
+                          },
+                        )
+                      ],
+                    )),
             ),
           ],
         ),

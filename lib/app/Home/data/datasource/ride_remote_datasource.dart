@@ -114,7 +114,7 @@ class RideRemoteDataSource extends BaseRideRemoteDataSource {
           "longitude": ride.toPlace.longitude,
         },
         "carId": ride.car,
-        "driverId": ride.driver,
+        "driverId": ride.driver.id,
         "status": ride.status,
       }),
     );

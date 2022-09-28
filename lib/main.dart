@@ -36,6 +36,7 @@ void main() async {
   // Stripe API config
   Stripe.publishableKey = AppConstants.stripeAPIKey;
 
+
   // Notifications Config
   final notificationService = NotificationService();
   notificationService.localNotifications

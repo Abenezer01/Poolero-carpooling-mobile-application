@@ -348,7 +348,7 @@ class RideForm extends GetWidget<MapController> {
                               controller.carsList[index].mark.name,
                               style: TextStyle(
                                 color: AppTheme.naturalColor2,
-                                fontFamily: 'Nunito',
+                                fontFamily: AppTheme.primaryFont,
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
                               ),

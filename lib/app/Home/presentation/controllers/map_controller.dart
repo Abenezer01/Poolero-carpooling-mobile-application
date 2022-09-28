@@ -50,6 +50,7 @@ class MapController extends GetxController {
   RxList ridesList = [].obs;
   String? startTime, endTime;
   User? user;
+  late final Ride ride;
   late final homeController;
   late GlobalKey<FormState> formKey;
 
@@ -74,7 +75,6 @@ class MapController extends GetxController {
     allowSmocking = false.obs;
     choosedCar = ''.obs;
 
-    print("isAuth: ${AppConstants.isAuth}");
     if (AppConstants.isAuth) {
       homeController = Get.find<HomeController>();
       user = homeController.user;
@@ -85,7 +85,8 @@ class MapController extends GetxController {
 
     if (Get.arguments != null) {
       if (Get.arguments['route']) {
-        RouteRide(Get.arguments['fromPlace'], Get.arguments['toPlace']);
+        ride = Get.arguments['ride'];
+        RouteRide(Get.arguments['ride']);
       }
     }
     isLoading.value = false;
@@ -339,7 +340,7 @@ class MapController extends GetxController {
         longitude: toPosition['longitude'],
       ),
       car: choosedCar.value,
-      driver: user!.id,
+      driver: User()..id = user!.id,
       status: Status.Planned.index,
       allowPauses: allowPauses.value,
       allowBigBags: allowBigBags.value,
@@ -442,38 +443,36 @@ class MapController extends GetxController {
     });
   }
 
-  void RouteRide(Place fromPlacePos, Place toPlacePos) {
+  void RouteRide(Ride ride) {
     print('RouteRide');
-    print(fromPlacePos);
-    print(toPlacePos);
 
     origin!.value = Marker(
         markerId: const MarkerId('origin'),
         infoWindow: const InfoWindow(title: 'origin'),
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet),
-        position: LatLng(double.parse(fromPlacePos.latitude.toString()),
-            double.parse(fromPlacePos.longitude.toString())));
+        position: LatLng(double.parse(ride.fromPlace.latitude.toString()),
+            double.parse(ride.fromPlace.longitude.toString())));
     destination!.value = Marker(
         markerId: const MarkerId('destination'),
         infoWindow: const InfoWindow(title: 'destination'),
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
-        position: LatLng(toPlacePos.latitude, toPlacePos.longitude));
+        position: LatLng(ride.toPlace.latitude, ride.toPlace.longitude));
     directions = Directions().obs;
     drawPoylines();
     focusOnMap.value = false;
     exploreRide.value = true;
 
     fromPosition = {
-      'city': fromPlacePos.city,
-      'adresse': fromPlacePos.adresse,
-      'latitude': fromPlacePos.latitude,
-      'longitude': fromPlacePos.longitude,
+      'city': ride.fromPlace.city,
+      'adresse': ride.fromPlace.adresse,
+      'latitude': ride.fromPlace.latitude,
+      'longitude': ride.fromPlace.longitude,
     };
     toPosition = {
-      'city': toPlacePos.city,
-      'adresse': toPlacePos.adresse,
-      'latitude': toPlacePos.latitude,
-      'longitude': toPlacePos.longitude,
+      'city': ride.fromPlace.city,
+      'adresse': ride.fromPlace.adresse,
+      'latitude': ride.fromPlace.latitude,
+      'longitude': ride.fromPlace.longitude,
     };
 
     // Get.toNamed('/map');

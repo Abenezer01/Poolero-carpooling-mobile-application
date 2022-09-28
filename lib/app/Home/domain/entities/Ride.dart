@@ -1,3 +1,4 @@
+import 'package:carpooling_beta/app/core/local_database/models/user.dart';
 import 'package:equatable/equatable.dart';
 import 'package:carpooling_beta/app/Home/domain/entities/Place.dart';
 import 'package:carpooling_beta/app/Home/domain/entities/Passager.dart';
@@ -23,7 +24,7 @@ class Ride extends Equatable {
   final Place fromPlace;
   final Place toPlace;
   final String car;
-  final String driver;
+  final User driver;
   final List<Passager> passagers;
   final int status;
 

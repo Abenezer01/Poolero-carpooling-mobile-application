@@ -1,3 +1,4 @@
+import 'package:carpooling_beta/app/Home/domain/entities/Ride.dart';
 import 'package:carpooling_beta/app/Home/presentation/components/static_widgets.dart';
 import 'package:carpooling_beta/app/Home/presentation/controllers/map_controller.dart';
 import 'package:carpooling_beta/app/Home/presentation/controllers/payment_controller.dart';
@@ -40,9 +41,10 @@ class FindRideView extends GetView<MapController> {
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
               itemCount: controller.ridesList.length,
               itemBuilder: (BuildContext context, int index) {
+                Ride ride = controller.ridesList[index];
                 return TripCard(
                   avatarImg: 'assets/Avatar.png',
-                  fullName: 'Bernard Alvarado',
+                  fullName: ride.driver.username,
                   description: '',
                   body: Column(
                     children: [
@@ -58,9 +60,7 @@ class FindRideView extends GetView<MapController> {
                           ),
                           Expanded(
                             child: Text(
-                              controller.ridesList[index].fromPlace.adresse +
-                                  ', ' +
-                                  controller.ridesList[index].fromPlace.city,
+                              '${ride.fromPlace.adresse}, ${ride.fromPlace.city}',
                               style: TextStyle(
                                 fontFamily: AppTheme.primaryFont,
                                 fontSize: 18,
@@ -98,9 +98,7 @@ class FindRideView extends GetView<MapController> {
                           ),
                           Expanded(
                             child: Text(
-                              controller.ridesList[index].toPlace.adresse +
-                                  ', ' +
-                                  controller.ridesList[index].toPlace.city,
+                              '${ride.toPlace.adresse}, ${ride.toPlace.city}',
                               style: TextStyle(
                                 fontFamily: AppTheme.primaryFont,
                                 fontSize: 18,
@@ -115,11 +113,19 @@ class FindRideView extends GetView<MapController> {
                   ),
                   tripInfos: [
                     TripInfo(
-                        icon: 'assets/Clock.png', info: '16:30', label: 'Time'),
+                        icon: 'assets/Clock.png',
+                        info:
+                            '${AppConstants.fromTime(ride.departureDate).hour}:${AppConstants.fromTime(ride.departureDate).minute}',
+                        label: 'Begin at'),
                     TripInfo(
-                        icon: 'assets/Chat.png', info: '94%', label: 'Ontime'),
+                        icon: 'assets/Clock1.png',
+                        info:
+                            '${AppConstants.fromTime(ride.endTime).hour}:${AppConstants.fromTime(ride.endTime).minute}',
+                        label: 'End at'),
                     TripInfo(
-                        icon: 'assets/Money.png', info: '56', label: 'Points'),
+                        icon: 'assets/Money.png',
+                        info: ride.totalCost.round().toString(),
+                        label: 'Dirhams'),
                   ],
                   buttons: [
                     MyButton(
@@ -127,10 +133,7 @@ class FindRideView extends GetView<MapController> {
                         isDisabled: false,
                         textTitle: 'Route',
                         onPresse: () async {
-                          print('FIND RIDE');
-                          controller.RouteRide(
-                              controller.ridesList[index].fromPlace,
-                              controller.ridesList[index].toPlace);
+                          controller.RouteRide(ride);
                         }),
                     MyButton(
                       isPrimary: true,
@@ -141,8 +144,8 @@ class FindRideView extends GetView<MapController> {
                           controller.pay(
                               int.parse(controller
                                   .requestedSeatsController.value.text),
-                              controller.ridesList[index].totalCost,
-                              controller.ridesList[index]);
+                              ride.totalCost,
+                              ride);
                         }
 
                         // controller.CheckInRide(

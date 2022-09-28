@@ -1,9 +1,12 @@
+import 'package:carpooling_beta/app/Home/domain/entities/Place.dart';
+import 'package:carpooling_beta/app/Home/domain/entities/Ride.dart';
 import 'package:carpooling_beta/app/Home/presentation/controllers/home_controller.dart';
 import 'package:carpooling_beta/app/core/components/my_button.dart';
 import 'package:carpooling_beta/app/core/components/trip_card.dart';
 import 'package:carpooling_beta/app/core/components/trip_infos.dart';
 import 'package:carpooling_beta/app/core/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:get/get.dart';
 
 class MyRidesPage extends GetWidget<HomeController> {
@@ -26,9 +29,12 @@ class MyRidesPage extends GetWidget<HomeController> {
                           horizontal: 15, vertical: 10),
                       itemCount: controller.myRides.length,
                       itemBuilder: (BuildContext context, int index) {
+                        Ride ride = controller.myRides[index];
+                        DateTime time = DateFormat("yyyy-MM-ddTHH:mm:ssZ")
+                            .parse(ride.departureDate);
                         return TripCard(
                           avatarImg: 'assets/Avatar.png',
-                          fullName: 'Bernard Alvarado',
+                          fullName: ride.driver.username,
                           description: '',
                           body: Column(
                             children: [
@@ -44,7 +50,7 @@ class MyRidesPage extends GetWidget<HomeController> {
                                   ),
                                   Expanded(
                                     child: Text(
-                                      '${controller.myRides[index].fromPlace.adresse}, ${controller.myRides[index].fromPlace.city}',
+                                      '${ride.fromPlace.adresse}, ${ride.fromPlace.city}',
                                       style: TextStyle(
                                         fontFamily: AppTheme.primaryFont,
                                         fontSize: 18,
@@ -83,7 +89,7 @@ class MyRidesPage extends GetWidget<HomeController> {
                                   ),
                                   Expanded(
                                     child: Text(
-                                      '${controller.myRides.value[index].toPlace.adresse}, ${controller.myRides[index].toPlace.city}',
+                                      '${ride.toPlace.adresse}, ${ride.toPlace.city}',
                                       style: TextStyle(
                                         fontFamily: AppTheme.primaryFont,
                                         fontSize: 18,
@@ -99,16 +105,16 @@ class MyRidesPage extends GetWidget<HomeController> {
                           tripInfos: [
                             TripInfo(
                                 icon: 'assets/Clock.png',
-                                info: '16:30',
+                                info: '${time.hour}:${time.minute}',
                                 label: 'Time'),
                             TripInfo(
-                                icon: 'assets/Chat.png',
-                                info: '94%',
-                                label: 'Ontime'),
+                                icon: 'assets/send.png',
+                                info: ride.totalDistance.round().toString(),
+                                label: 'KM'),
                             TripInfo(
                                 icon: 'assets/Money.png',
-                                info: '56',
-                                label: 'Points'),
+                                info: ride.totalCost.round().toString(),
+                                label: 'Dirhams'),
                           ],
                           buttons: [
                             MyButton(
@@ -116,18 +122,21 @@ class MyRidesPage extends GetWidget<HomeController> {
                                 isDisabled: false,
                                 textTitle: 'Route',
                                 onPresse: () async {
-                                  // Get.to(RiderView(
-                                  //     fromPlace: controller.myRides[index]
-                                  //         ['fromPlace'],
-                                  //     toPlace: controller.myRides[index]
-                                  //         ['toPlace']));
+                                  Get.toNamed('/map', arguments: {
+                                    'route': true,
+                                      'ride': ride,
+                                  });
                                 }),
                             MyButton(
                               isPrimary: false,
                               isDisabled: false,
                               isDecline: true,
                               textTitle: 'Cancel',
-                              onPresse: () {},
+                              onPresse: () {
+                                controller.checkingId.value =
+                                    controller.myCheckings[index].id;
+                                controller.questionDialog();
+                              },
                             ),
                           ],
                         );

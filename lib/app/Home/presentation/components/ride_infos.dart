@@ -1,6 +1,6 @@
-
 import 'package:carpooling_beta/app/Home/presentation/components/static_widgets.dart';
 import 'package:carpooling_beta/app/Home/presentation/controllers/map_controller.dart';
+import 'package:carpooling_beta/app/core/constants.dart';
 import 'package:carpooling_beta/app/core/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -21,7 +21,7 @@ class RideInfos extends GetWidget<MapController> {
             margin: EdgeInsets.symmetric(horizontal: 20),
             child: TripCard(
               avatarImg: 'assets/Avatar.png',
-              fullName: 'Bernard Alvarado',
+              fullName: controller.ride.driver.username,
               description: '',
               body: Column(
                 children: [
@@ -37,11 +37,9 @@ class RideInfos extends GetWidget<MapController> {
                       ),
                       Expanded(
                         child: Text(
-                          (controller.fromPosition as Map)['adresse'] +
-                              ', ' +
-                              (controller.fromPosition as Map)['city'],
+                          '${controller.ride.fromPlace.adresse}, ${controller.ride.fromPlace.city}',
                           style: TextStyle(
-                            fontFamily: 'Nunito',
+                            fontFamily: AppTheme.primaryFont,
                             fontSize: 18,
                             color: AppTheme.naturalColor1,
                           ),
@@ -77,11 +75,9 @@ class RideInfos extends GetWidget<MapController> {
                       ),
                       Expanded(
                         child: Text(
-                          (controller.toPosition as Map)['adresse'] +
-                              ', ' +
-                              (controller.toPosition as Map)['city'],
+                          '${controller.ride.toPlace.adresse}, ${controller.ride.toPlace.city}',
                           style: TextStyle(
-                            fontFamily: 'Nunito',
+                            fontFamily: AppTheme.primaryFont,
                             fontSize: 18,
                             color: AppTheme.naturalColor1,
                           ),
@@ -94,9 +90,18 @@ class RideInfos extends GetWidget<MapController> {
               ),
               tripInfos: [
                 TripInfo(
-                    icon: 'assets/Clock.png', info: '16:30', label: 'Time'),
-                TripInfo(icon: 'assets/Chat.png', info: '94%', label: 'Ontime'),
-                TripInfo(icon: 'assets/Money.png', info: '56', label: 'Points'),
+                    icon: 'assets/Clock.png',
+                    info:
+                        '${AppConstants.fromTime(controller.ride.departureDate).hour}:${AppConstants.fromTime(controller.ride.endTime).minute}',
+                    label: 'Time'),
+                TripInfo(
+                    icon: 'assets/send.png',
+                    info: controller.ride.totalDistance.round().toString(),
+                    label: 'KM'),
+                TripInfo(
+                    icon: 'assets/Money.png',
+                    info: controller.ride.totalCost.round().toString(),
+                    label: 'Dirhams'),
               ],
             ),
           ),

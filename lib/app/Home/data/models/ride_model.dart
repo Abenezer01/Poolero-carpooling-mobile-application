@@ -1,6 +1,7 @@
 import 'package:carpooling_beta/app/Home/data/models/place_model.dart';
 import 'package:carpooling_beta/app/Home/domain/entities/Ride.dart';
 import 'package:carpooling_beta/app/core/error_handling/data_error.dart';
+import 'package:carpooling_beta/app/core/local_database/models/user.dart';
 import 'package:flutter/foundation.dart';
 
 class RideModel extends Ride {
@@ -56,7 +57,9 @@ class RideModel extends Ride {
           longitude: json['toPlace']['longitude'] as double,
         ),
         car: '',
-        driver: json['driver']['id'],
+        driver: User()
+          ..id = json['driver']['id']
+          ..username = json['driver']['userName'],
         passagers: [],
         status: json['status'],
       );
