@@ -76,6 +76,8 @@ Poolero is a carpooling mobile application developed using Flutter/Dart. It aims
 
 ## 🎨 Color Reference
 
+![Colors](https://i.postimg.cc/fWqcv0RW/Color.png) | ![Typography](https://i.postimg.cc/bJzxmxnr/Typography.png) | ![Shadows](https://i.postimg.cc/Pqnzwsrm/Shadows.png)
+----------------------|----------------------|----------------------
 
 ## 👨‍💻 Run Locally
 
